@@ -363,7 +363,7 @@ const Main = () => {
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
-                  <li className="">
+                  <li className="d-none">
                     <button
                       className="dashboard dropdown-item d-flex align-items-center gap-2"
                       onClick={() => {
