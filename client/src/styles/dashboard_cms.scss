@@ -1,0 +1,158 @@
+.dashboard-cms {
+    max-width: 100vw;
+    max-height: 100vh;
+    background-color: #F0F0F0;
+
+    .navbar {
+        background-color: white;
+        height: 100vh;
+
+        h6 {
+            border-bottom: 1.5px solid #F0F0F0;
+        }
+
+        button {
+            font-size: 14px;
+            font-weight: 500;
+            background-image: linear-gradient(to right, white, white);
+            color: #737373;
+            box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2);
+
+            &:hover {
+                background-image: linear-gradient(to right, #DFF4DF, #DFF4DF);
+                color: #297209;
+            }
+
+            &:focus {
+                background-image: linear-gradient(to right, #3B9315, #297209);
+                color: white;
+            }
+
+            .icon {
+                font-size: 20px;
+            }
+
+            label {
+                cursor: pointer;
+            }
+        }
+
+        .active {
+            background-image: linear-gradient(to right, #3B9315, #297209);
+            color: white;
+            pointer-events: none;
+        }
+
+        .exit-nav {
+            font-size: 14px;
+            font-weight: 500;
+            color: #737373;
+
+            .back-nav {
+                width: max-content;
+                cursor: pointer;
+    
+                &:hover {
+                    color: #297209;
+                }
+    
+                .icon {
+                    font-size: 20px;
+                }
+    
+                label {
+                    cursor: pointer;
+                }
+            }
+
+            .logout-nav {
+                width: max-content;
+                cursor: pointer;
+    
+                &:hover {
+                    color: #DE4452;
+                }
+    
+                .icon {
+                    font-size: 20px;
+                }
+    
+                label {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .content {
+        height: 100vh;
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .dashboard-cms {
+        .navbar {
+            h6 {
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 13px;
+    
+                .icon {
+                    font-size: 17px;
+                }
+            }
+    
+            .exit-nav {
+                font-size: 13px;
+    
+                .back-nav {
+                    .icon {
+                        font-size: 17px;
+                    }
+                }
+    
+                .logout-nav {
+                    .icon {
+                        font-size: 17px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .dashboard-cms {
+        .navbar {
+            h6 {
+                font-size: 13px;
+            }
+
+            button {
+                font-size: 12px;
+    
+                .icon {
+                    font-size: 16px;
+                }
+            }
+    
+            .exit-nav {
+                font-size: 12px;
+    
+                .back-nav {
+                    .icon {
+                        font-size: 16px;
+                    }
+                }
+    
+                .logout-nav {
+                    .icon {
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+    }
+}

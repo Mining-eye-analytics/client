@@ -1,0 +1,220 @@
+.dashboard {
+    height: 100%;
+
+    h1 {
+        font-size: 20px;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
+    }
+
+    button {
+        font-size: 14px;
+        font-weight: 500;
+        background-image: linear-gradient(to right, #3B9315, #297209);
+        color: white;
+        box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2);
+
+        &:hover {
+            background-image: linear-gradient(to right, #297209, #297209);
+        }
+
+        &:focus {
+            background-image: linear-gradient(to right, #297209, #297209);
+        }
+
+        .icon {
+            font-size: 20px;
+        }
+
+        label {
+            cursor: pointer;
+        }
+    }
+
+    .col-3, .col-6 {
+        width: fit-content;
+        height: max-content;
+
+        .info-header {
+            color: #737373;
+            .icon {
+                font-size: 14px;
+            }
+
+            label {
+                font-size: 12px;
+            }
+        }
+
+        .info {
+            background-color: white;
+            border: 1px solid #737373;
+
+            label {
+                white-space: nowrap;
+            }
+
+            .info-title {
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            .border-start {
+                border-color: #737373 !important;
+                border-left-style: dashed !important;
+            }
+
+            .info-content {
+                color: #297209;
+                :nth-child(1) {
+                    font-size: 26px;
+                    font-weight: 500;
+                }
+
+                :nth-child(2) {
+                    font-size: 14px;
+                }
+            }
+
+            .info-chart, .info-bar {
+                font-size: 12px;
+            }
+
+            .info-other {
+                color: #737373;
+                .icon {
+                    font-size: 14px;
+                }
+
+                label {
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .dashboard {
+        h1 {
+            font-size: 17px;
+        }
+
+        button {
+            font-size: 13px;
+
+            .icon {
+                font-size: 17px;
+            }
+        }
+
+        .col-3 {    
+            .info-header {
+                .icon {
+                    font-size: 13px;
+                }
+
+                label {
+                    font-size: 11px;
+                }
+            }
+
+            .info {
+                label {
+                    font-size: 13px;
+                }
+
+                .info-title {
+                    font-size: 13px;
+                }
+
+                .info-content {
+                    :nth-child(1) {
+                        font-size: 25px;
+                    }
+
+                    :nth-child(2) {
+                        font-size: 13px;
+                    }
+                }
+
+                .info-chart, .info-bar {
+                    font-size: 11px;
+                }
+
+                .info-other {
+                    .icon {
+                        font-size: 13px;
+                    }
+
+                    label {
+                        font-size: 11px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .dashboard {
+        h1 {
+            font-size: 16px;
+        }
+
+        button {
+            font-size: 12px;
+
+            .icon {
+                font-size: 16px;
+            }
+        }
+
+        .col-3 {    
+            .info-header {
+                .icon {
+                    font-size: 12px;
+                }
+
+                label {
+                    font-size: 10px;
+                }
+            }
+
+            .info {
+                label {
+                    font-size: 12px;
+                }
+
+                .info-title {
+                    font-size: 12px;
+                }
+
+                .info-content {
+                    :nth-child(1) {
+                        font-size: 24px;
+                    }
+
+                    :nth-child(2) {
+                        font-size: 12px;
+                    }
+                }
+
+                .info-chart, .info-bar {
+                    font-size: 10px;
+                }
+
+                .info-other {
+                    .icon {
+                        font-size: 12px;
+                    }
+
+                    label {
+                        font-size: 10px;
+                    }
+                }
+            }
+        }
+    }
+}

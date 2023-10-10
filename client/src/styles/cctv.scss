@@ -1,0 +1,196 @@
+.cctv {
+    .title {
+        box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+        padding: 8px 16px;
+        border-radius: 8px 8px 0 0;
+
+        h6 {
+            margin: 0px;
+        }
+
+        label {
+            font-size: 12px;
+        }
+    }
+
+    .content {
+        box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+        padding: 12px 24px;
+        border-radius: 0 0 8px 8px;
+
+        .cctv-list {
+            button {
+                font-size: 12px;
+                font-weight: 500;
+                box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2);
+
+                &:hover {
+                    background-color: #DFF4DF;
+                    color: #297209;
+                }
+
+                &:focus {
+                    background-image: linear-gradient(to right, #3B9315, #297209);
+                    color: white;
+                }
+
+                .col-1 {
+                    div {
+                        width: 10px;
+                        height: 10px;
+                        background-color: #FFD801;
+                        border-radius: 100%;
+                        animation: ping 1s cubic-bezier(0, 0, 1, 0) infinite;
+                    }
+
+                    @keyframes ping {
+                        75%,
+                        100% {
+                          transform: scale(1);
+                          opacity: 0;
+                        }
+                      }
+                }
+            }
+
+            .active {
+                background-image: linear-gradient(to right, #3B9315, #297209);
+                color: white;
+                pointer-events: none;
+            }
+        }
+
+        .view-all-cctv button {
+            font-size: 12px;
+            font-weight: 500;
+            background-image: linear-gradient(to right, #3B9315, #297209);
+            color: white;
+
+            &:hover {
+                background-image: linear-gradient(to right, #297209, #297209);
+            }
+        }
+
+        .spinner-border {
+            color: #3B9315;
+        }
+    }
+}
+
+.cctv-light {
+    .title {
+        background-color: white;
+
+        h6 {
+            color: black;
+        }
+
+        label {
+            color: #737373;
+        }
+    }
+
+    .content {
+        background-color: white;
+
+        .cctv-list {
+            button {
+                background-color: white;
+                color: #737373;
+            }
+
+            .data-not-found {
+                color: black;
+            }
+        }
+    }
+}
+
+.cctv-dark {
+    .title {
+        background-color: #1E1E1E;
+
+        h6 {
+            color: white;
+        }
+
+        label {
+            color: white;
+        }
+    }
+
+    .content {
+        background-color: #1E1E1E;
+
+        .cctv-list {
+            button {
+                background-color: #2C2C2C;
+                color: white;
+            }
+
+            .data-not-found {
+                color: white;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .cctv {
+        .title {
+            h6 {
+                font-size: 14px;
+            }
+
+            label {
+                font-size: 11px;
+            }
+        }
+
+        .content {
+            .cctv-list {
+                button {
+                    font-size: 11px;
+                }
+
+                .data-not-found {
+                    font-size: 13px;
+                }
+            }
+
+            .view-all-cctv button {
+                font-size: 11px;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .cctv {
+        .title {
+            h6 {
+                font-size: 13px;
+            }
+
+            label {
+                font-size: 10px;
+            }
+        }
+
+        .content {
+            .cctv-list {
+                button {
+                    font-size: 10px;
+                }
+
+                .data-not-found {
+                    font-size: 12px;
+                }
+            }
+
+            .view-all-cctv button {
+                font-size: 10px;
+            }
+        }
+    }
+}

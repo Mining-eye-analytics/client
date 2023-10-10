@@ -1,0 +1,42 @@
+.export-button {
+    background-image: linear-gradient(to right, #3B9315, #297209);
+    color: white;
+
+    &:hover {
+        background-image: linear-gradient(to right, #297209, #297209);
+    }
+
+    .icon {
+        font-size: 20px;
+    }
+
+    label {
+        font-size: 16px !important;
+        color: white !important;
+        cursor: pointer;
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .export-button {
+        .icon {
+            font-size: 17px;
+        }
+
+        label {
+            font-size: 14px !important;
+        }
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .export-button {
+        .icon {
+            font-size: 16px;
+        }
+
+        label {
+            font-size: 13px !important;
+        }
+    }
+}

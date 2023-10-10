@@ -1,0 +1,46 @@
+.not-found {
+    height: 100vh;
+    width: 100vw;
+
+    img {
+        height: 40vh;
+    }
+
+    label {
+        width: 40vw;
+    }
+}
+
+.not-found-light {
+    background-color: white;
+    color: black;
+}
+
+.not-found-dark {
+    background-color: #2C2C2C;
+    color: white;
+}
+
+@media only screen and (max-width: 1530px) {
+    .not-found {
+        h3 {
+            font-size: 23px;
+        }
+    
+        label {
+            font-size: 14px;
+        }
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .not-found {
+        h3 {
+            font-size: 22px;
+        }
+    
+        label {
+            font-size: 13px;
+        }
+    }
+}

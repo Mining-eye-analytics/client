@@ -1,0 +1,398 @@
+.data-tervalidasi {
+    .title {
+        box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+        padding: 8px 16px;
+        border-radius: 8px 8px 0 0;
+
+        h6 {
+            margin: 0px;
+        }
+
+        .input-group {
+            .input-group-text {
+                background-color: transparent;
+            }
+
+            .form-select {
+                background-color: transparent !important;
+                cursor: pointer;
+            }
+    
+            .period-button {
+                border: 1px solid #DEE2E6;
+                border-radius: 0 6px 6px 0;
+                padding: 6px;
+
+                label {
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .disabled {
+            pointer-events: none;
+        }
+
+        .modal-dialog {
+            max-width: max-content;
+
+            .modal-header {
+                h1 {
+                    font-size: 20px;
+                }
+
+                .btn-close {
+                    background-color: white;
+                }
+            }
+
+            .modal-body {
+                .advanced-filter-button {
+                    font-size: 14px;
+                    font-weight: 500;
+                    background-color: transparent;
+                }
+            }
+
+            .modal-footer {
+                button {
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+
+                .reset-button {
+                    border: 2px solid #3B9315;
+
+                    &:hover {
+                        background-image: linear-gradient(to right, #297209, #297209);
+                        border: 2px solid #297209;
+                        color: white;
+                    }
+                }
+
+                .ok-button {
+                    background-image: linear-gradient(to right, #3B9315, #297209);
+                    color: white;
+
+                    &:hover {
+                        background-image: linear-gradient(to right, #297209, #297209);
+                    }
+                }
+            }
+        }
+    }
+
+    .content {
+        box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+        padding: 12px 24px;
+        border-radius: 0 0 8px 8px;
+
+        label {
+            font-size: 14px;
+        }
+
+        .pagination-nav {
+            height: 40px;
+
+            button {
+                min-width: 90px;
+                font-size: 14px;
+                font-weight: 500;
+                background-image: linear-gradient(to right, #3B9315, #297209);
+                color: white;
+
+                &:hover {
+                    background-image: linear-gradient(to right, #297209, #297209);
+                }
+            }
+
+            .disabled {
+                border: 1px solid #737373 !important;
+                color: #737373;
+                pointer-events: none;
+            }
+        }
+
+        .spinner-border {
+            color: #3B9315;
+        }
+    }
+}
+
+.data-tervalidasi-light {
+    .title {
+        background-color: white;
+
+        h6 {
+            color: black;
+        }
+
+        label {
+            color: #737373;
+        }
+
+        .input-group {
+            .form-select {
+                color: #737373;
+    
+                option {
+                    background-color: white;
+                }
+    
+                &:hover {
+                    color: #297209;
+                }
+            }
+    
+            .period-button {
+                background-image: linear-gradient(to right, white, white) !important;
+    
+                label {
+                    color: #737373;
+    
+                    &:hover {
+                        color: #297209;
+                    }
+                }
+            }
+        }
+
+        .modal-dialog {
+            color: black;
+
+            .modal-header {
+                background-color: white;
+            }
+
+            .modal-body {
+                background-color: white;
+
+                .advanced-filter-button {
+                    color: #737373;
+
+                    &:hover {
+                        color: #297209;
+                    }
+                }
+            }
+
+            .modal-footer {
+                background-color: white;
+
+                label {
+                    color: #737373;
+                }
+
+                .reset-button {
+                    background-image: linear-gradient(to right, white, white);
+                    color: #297209;
+                    border: 2px solid #3B9315;
+                }
+            }
+        }
+    }
+
+    .content {
+        background-color: white;
+
+        label {
+            color: #737373;
+        }
+
+        .pagination-nav {
+            .disabled {
+                background-image: linear-gradient(to right, white, white);
+            }
+        }
+    }
+}
+
+.data-tervalidasi-dark {
+    .title {
+        background-color: #1E1E1E;
+
+        h6 {
+            color: white;
+        }
+
+        label {
+            color: white;
+        }
+
+        .input-group {
+            .form-select {
+                color: white;
+    
+                option {
+                    background-color: #1E1E1E;
+                }
+    
+                &:hover {
+                    color: white;
+                }
+            }
+    
+            .period-button {
+                background-image: linear-gradient(to right, #1E1E1E, #1E1E1E) !important;
+    
+                label {
+                    color: white;
+    
+                    &:hover {
+                        color: white;
+                    }
+                }
+            }
+        }
+
+        .modal-dialog {
+            color: white;
+
+            .modal-header {
+                background-color: #1E1E1E;
+
+                .btn-close {
+                    background-color: white;
+                }
+            }
+
+            .modal-body {
+                background-color: #1E1E1E;
+
+                .advanced-filter-button {
+                    color: white;
+
+                    &:hover {
+                        color: #3B9315;
+                    }
+                }
+            }
+
+            .modal-footer {
+                background-color: #1E1E1E;
+
+                label {
+                    color: white;
+                }
+
+                .reset-button {
+                    background-image: linear-gradient(to right, #1E1E1E, #1E1E1E);
+                    color: white;
+                    border: 2px solid #3B9315;
+                }
+            }
+        }
+    }
+
+    .content {
+        background-color: #1E1E1E;
+
+        label {
+            color: white;
+        }
+
+        .pagination-nav {
+            .disabled {
+                background-image: linear-gradient(to right, #1E1E1E, #1E1E1E);
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .data-tervalidasi {
+        .title {
+            h6 {
+                font-size: 14px;
+            }
+
+            label {
+                font-size: 14px;
+            }
+
+            .form-select {
+                font-size: 14px;
+            }
+
+            .modal-dialog {
+                max-width: max-content;
+
+                .modal-header {
+                    h1 {
+                        font-size: 17px;
+                    }
+                }
+
+                .modal-footer {
+                    button {
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+
+        .content {
+            label {
+                font-size: 13px;
+            }
+            
+            .pagination-nav {
+                font-size: 13px;
+
+                button {
+                    min-width: 84px;
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .data-tervalidasi {
+        .title {
+            h6 {
+                font-size: 13px;
+            }
+
+            label {
+                font-size: 13px;
+            }
+
+            .form-select {
+                font-size: 13px;
+            }
+
+            .modal-dialog {
+                max-width: max-content;
+
+                .modal-header {
+                    h1 {
+                        font-size: 16px;
+                    }
+                }
+
+                .modal-footer {
+                    button {
+                        font-size: 11px;
+                    }
+                }
+            }
+        }
+
+        .content {
+            label {
+                font-size: 12px;
+            }
+            
+            .pagination-nav {
+                font-size: 12px;
+
+                button {
+                    min-width: 80px;
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}

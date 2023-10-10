@@ -1,0 +1,258 @@
+.data-table {
+    max-height: 50.1vh !important;
+
+    table {
+        font-size: 14px;
+
+        thead {
+            .table-header {
+                background-color: #3B9315;
+                color: white;
+            }
+        }
+        
+        tbody {
+            tr {
+                &:hover {
+                    th, td, label {
+                        cursor: pointer;
+                        background-color: #DFF4DF;
+                        color: #297209;
+                    }
+                }
+            }
+
+            .active {
+                th, td, label {
+                    background-color: #DFF4DF;
+                    color: #297209;
+                }
+            }
+        }
+    }
+
+    .modal-dialog {
+        .modal-header {
+            h1 {
+                font-size: 20px;
+            }
+
+            .btn-close {
+                background-color: white;
+            }
+        }
+
+        .modal-body {
+            .spinner-border {
+                color: #3B9315;
+            }
+            
+            label {
+                color: black;
+            }
+
+            .deviation-navigation {
+                button {
+                    background-color: transparent;
+                    font-size: 24px;
+                }
+    
+                .disabled {
+                    visibility: hidden;
+                }
+            }
+        }
+
+        .modal-footer {
+            button {
+                font-size: 14px;
+                font-weight: 500;
+                background-image: linear-gradient(to right, #3B9315, #297209);
+                color: white;
+
+                &:hover {
+                    background-image: linear-gradient(to right, #297209, #297209);
+                }
+            }
+        }
+    }
+
+    .status-none {
+        font-weight: 500;
+        background-color: #F0F3FF !important;
+        border: 2px solid #B1C5F6 !important;
+        color: #1573FD !important;
+    }
+
+    .status-true {
+        font-weight: 500;
+        background-color: #D2F1DD !important;
+        border: 2px solid #8EDCA9 !important;
+        color: #1F8A58 !important;
+    }
+
+    .status-false {
+        font-weight: 500;
+        background-color: #F9D1CC !important;
+        border: 2px solid #F08C80 !important;
+        color: #DE4452 !important;
+    }
+}
+
+.data-table-light {
+    table {
+        tbody {
+            tr {
+                th, td, label {
+                    background-color: white;
+                    color: #737373;
+                }
+            }
+        }
+    }
+
+    .modal-dialog {
+        color: black;
+
+        .modal-header {
+            background-color: white;
+        }
+
+        .modal-body {
+            background-color: white;
+
+            label {
+                color: black;
+            }
+
+            .deviation-navigation {
+                button {
+                    color: #737373;
+    
+                    &:hover {
+                        color: #297209;
+                    }
+                }
+            }
+        }
+
+        .modal-footer {
+            background-color: white;
+        }
+    }
+}
+
+.data-table-dark {
+    table {        
+        tbody {
+            tr {
+                th, td, label {
+                    background-color: #1E1E1E;
+                    color: white;
+                }
+            }
+        }
+    }
+
+    .modal-dialog {
+        color: white;
+
+        .modal-header {
+            background-color: #1E1E1E;
+        }
+
+        .modal-body {
+            background-color: #1E1E1E;
+
+            label {
+                color: white;
+            }
+
+            .deviation-navigation {
+                button {
+                    color: white;
+    
+                    &:hover {
+                        color: #3B9315;
+                    }
+                }
+            }
+        }
+
+        .modal-footer {
+            background-color: #1E1E1E;
+        }
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .data-table {
+        max-height: 48.2vh !important;
+    
+        table {
+            font-size: 12px;
+    
+            .status-none, .status-true, .status-false {
+                font-size: 12px;
+            }
+        }
+
+        .modal-dialog {
+            .modal-header {
+                h1 {
+                    font-size: 17px;
+                }
+            }
+
+            .modal-body {
+                .deviation-navigation {
+                    button {
+                        font-size: 21px;
+                    }
+                }
+            }
+
+            .modal-footer {
+                button {
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .data-table {
+        max-height: 47.3vh !important;
+    
+        table {
+            font-size: 11px;
+    
+            .status-none, .status-true, .status-false {
+                font-size: 11px;
+            }
+        }
+
+        .modal-dialog {
+            .modal-header {
+                h1 {
+                    font-size: 16px;
+                }
+            }
+
+            .modal-body {
+                .deviation-navigation {
+                    button {
+                        font-size: 20px;
+                    }
+                }
+            }
+
+            .modal-footer {
+                button {
+                    font-size: 11px;
+                }
+            }
+        }
+    }
+}
