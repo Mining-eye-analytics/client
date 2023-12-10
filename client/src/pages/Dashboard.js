@@ -1,5 +1,5 @@
 import "../styles/dashboard.scss";
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Icon } from "@iconify/react";
 import {
   BarChart,
@@ -15,6 +15,7 @@ import {
   Pie,
   Sector,
 } from "recharts";
+import { useSelector } from "react-redux";
 
 const renderActiveShape = (props) => {
   const {
@@ -32,16 +33,18 @@ const renderActiveShape = (props) => {
 
   return (
     <g>
-      <text x={cx} y={cy} dy={0} textAnchor="middle" fill={fill}>
+      <text x={cx} y={cy} dy={-16} textAnchor="middle" fill={fill}>
         {payload.name}
-        {` (${(percent * 100).toFixed(2)}%)`}
       </text>
+      <text x={cx} y={cy} dy={4} textAnchor="middle" fill={fill}>{` (${(
+        percent * 100
+      ).toFixed(2)}%)`}</text>
       <text
         x={cx}
         y={cy}
-        dy={18}
+        dy={24}
         textAnchor="middle"
-        fill="#333"
+        fill={props.mode === "light" ? "#333" : "white"}
       >{`${value} Deviasi`}</text>
       <Sector
         cx={cx}
@@ -65,7 +68,11 @@ const renderActiveShape = (props) => {
   );
 };
 
-const Dashboard = ({ data, dataCctv }) => {
+const Dashboard = () => {
+  const mode = useSelector((state) => state.general.mode);
+  const userList = useSelector((state) => state.user.list);
+  const cctvList = useSelector((state) => state.cctv.list);
+
   const [activeIndex, setActiveIndex] = useState(0);
   const onPieEnter = useCallback(
     (_, index) => {
@@ -74,8 +81,49 @@ const Dashboard = ({ data, dataCctv }) => {
     [setActiveIndex]
   );
 
+  const [deviationData, setDeviationData] = useState([]);
+  const [cctvData, setCctvData] = useState([]);
+
+  const getDay = (number) => {
+    const day = new Date();
+    day.setDate(day.getDate() - number);
+    return day;
+  };
+
+  useEffect(() => {
+    const tempData = [];
+
+    for (let i = 0; i < 7; i++) {
+      tempData.unshift({
+        name: new Date(getDay(i)).toLocaleString("id-ID", {
+          weekday: "long",
+        }),
+        true: Math.floor(Math.random() * 500),
+        false: Math.floor(Math.random() * 1500),
+      });
+    }
+    setDeviationData(tempData);
+  }, []);
+
+  useEffect(() => {
+    const tempData = [];
+
+    for (let i = 0; i < cctvList.length; i++) {
+      tempData.push({
+        name: cctvList[i]?.name + " - " + cctvList[i]?.location,
+        value: Math.floor(Math.random() * 3000),
+      });
+    }
+    setCctvData(tempData);
+  }, [cctvList]);
+
   return (
-    <div className="dashboard d-flex flex-column gap-3">
+    <div
+      className={
+        "dashboard d-flex flex-column gap-3" +
+        (mode === "light" ? " dashboard-light" : " dashboard-dark")
+      }
+    >
       <div className="row m-0">
         <div className="col p-0">
           <h1>Dasbor</h1>
@@ -95,10 +143,10 @@ const Dashboard = ({ data, dataCctv }) => {
                 Total pengguna pada <br /> HO
               </label>
               <div className="info-content d-flex justify-content-center align-items-end gap-1">
-                <label>11</label>
+                <label>{userList.length}</label>
                 <label>pengguna</label>
               </div>
-              <div className="info-other d-flex justify-content-end align-items-center gap-1">
+              <div className="info-other d-flex justify-content-end gap-1">
                 <Icon className="icon" icon="clarity:server-solid" />
                 <label>
                   {window.location.hostname === "localhost"
@@ -115,9 +163,14 @@ const Dashboard = ({ data, dataCctv }) => {
                 <label>3</label>
                 <label>pengguna</label>
               </div>
-              <div className="info-other d-flex justify-content-end align-items-center gap-1">
+              <div className="info-other d-flex justify-content-end gap-1">
                 <Icon className="icon" icon="akar-icons:clock" />
-                <label>01.23 WITA</label>
+                <label>
+                  {new Date().toLocaleString("en-US", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </label>
               </div>
             </div>
           </div>
@@ -130,12 +183,12 @@ const Dashboard = ({ data, dataCctv }) => {
               </label>
               <div className="d-flex justify-content-center align-items-end gap-1">
                 <div className="info-content d-flex align-items-end gap-1">
-                  <label>4</label>
+                  <label>{cctvList.length}</label>
                   <label>CCTV</label>
                 </div>
                 <div className="info-content">
                   <label></label>
-                  <label>-</label>
+                  <label>/</label>
                 </div>
                 <div className="info-content d-flex align-items-end gap-1">
                   <label>6</label>
@@ -143,9 +196,13 @@ const Dashboard = ({ data, dataCctv }) => {
                 </div>
               </div>
 
-              <div className="info-other d-flex justify-content-end align-items-center gap-1">
+              <div className="info-other d-flex justify-content-end gap-1">
                 <Icon className="icon" icon="carbon:location-filled" />
-                <label>BMO 2</label>
+                <label>
+                  {window.location.hostname === "localhost"
+                    ? "10.10.10.66"
+                    : window.location.hostname}
+                </label>
               </div>
             </div>
           </div>
@@ -157,18 +214,32 @@ const Dashboard = ({ data, dataCctv }) => {
               <div className="info-content d-flex justify-content-center align-items-end gap-1">
                 <label>HO - Indoor Finance</label>
               </div>
-              <div className="info-other d-flex justify-content-end align-items-center gap-1">
+              <div className="info-other d-flex justify-content-end gap-1">
                 <Icon className="icon" icon="bi:calendar-week" />
-                <label>30 Mei 2023</label>
+                <label>
+                  {new Date().getDate() +
+                    " " +
+                    new Date().toLocaleString("id-ID", { month: "long" }) +
+                    " " +
+                    new Date().getFullYear()}
+                </label>
               </div>
             </div>
           </div>
         </div>
         <div className="row m-0 gap-3 align-items-end">
           <div className="col-3 p-0 d-grid gap-1">
-            <div className="info-header d-flex align-items-center gap-1">
+            <div className="info-header d-flex gap-1">
               <Icon className="icon" icon="bi:calendar-week" />
-              <label>28 Agustus - 3 September</label>
+              <label>
+                {getDay(6).getDate() +
+                  " " +
+                  getDay(6).toLocaleString("id-ID", { month: "long" }) +
+                  " - " +
+                  (new Date().getDate() +
+                    " " +
+                    new Date().toLocaleString("id-ID", { month: "long" }))}
+              </label>
             </div>
             <div className="info rounded-2 d-grid gap-3 px-3 py-2">
               <div className="info-title">
@@ -178,7 +249,7 @@ const Dashboard = ({ data, dataCctv }) => {
                 <BarChart
                   width={500}
                   height={300}
-                  data={data}
+                  data={deviationData}
                   margin={{
                     top: 20,
                     right: 5,
@@ -208,7 +279,7 @@ const Dashboard = ({ data, dataCctv }) => {
                     <Pie
                       activeIndex={activeIndex}
                       activeShape={renderActiveShape}
-                      data={dataCctv}
+                      data={cctvData}
                       cx={90}
                       cy={100}
                       innerRadius={60}
@@ -216,6 +287,7 @@ const Dashboard = ({ data, dataCctv }) => {
                       fill="#8884d8"
                       dataKey="value"
                       onMouseEnter={onPieEnter}
+                      mode={mode}
                     />
                   </PieChart>
                 </div>

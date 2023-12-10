@@ -1,7 +1,7 @@
 import "../styles/validasi_notifikasi.scss";
 import Validation from "../components/Validation";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import customAxios from "../axios/customAxios";
 import { Icon } from "@iconify/react";
 import ReactImageMagnify from "react-magnify-image";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,6 +15,8 @@ const ValidasiNotifikasi = () => {
   const currentNotification = useSelector(
     (state) => state.notification.current
   );
+  const cctvList = useSelector((state) => state.cctv.list);
+  const userList = useSelector((state) => state.user.list);
 
   const [currentDeviationImageBlob, setCurrentDeviationImageBlob] = useState();
   const [currentDeviationImageLoading, setCurrentDeviationImageLoading] =
@@ -23,25 +25,14 @@ const ValidasiNotifikasi = () => {
   useEffect(() => {
     if (currentNotification !== undefined) {
       setCurrentDeviationImageLoading(true);
-      axios
-        .get(
-          window.location.protocol +
-            "//" +
-            (window.location.hostname === "localhost"
-              ? "10.10.10.66"
-              : window.location.hostname) +
-            ":" +
-            process.env.REACT_APP_API_PORT +
-            "/api/" +
-            currentNotification?.path +
-            currentNotification?.image,
-          {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-            responseType: "arraybuffer",
-          }
-        )
+      customAxios({
+        method: "GET",
+        url:
+          "/analytics/" +
+          currentNotification?.path +
+          currentNotification?.image,
+        responseType: "arraybuffer",
+      })
         .then((res) => {
           let blob = new Blob([res.data], {
             type: res.headers["content-type"],
@@ -183,9 +174,11 @@ const ValidasiNotifikasi = () => {
                           <div className="d-flex gap-2">
                             <Icon className="icon" icon="mdi:cctv" />
                             <label>
-                              {currentNotification?.name +
-                                " - " +
-                                currentNotification?.location}
+                              {cctvList.map((cctv) => {
+                                return cctv.id === currentNotification.cctv_id
+                                  ? cctv.name + " - " + cctv.location
+                                  : "";
+                              })}
                             </label>
                           </div>
                           <div className="d-flex gap-2">
@@ -200,13 +193,19 @@ const ValidasiNotifikasi = () => {
                                 className="icon"
                                 icon="fa6-solid:helmet-safety"
                               />
-                              <label>{currentNotification?.user_name}</label>
+                              <label>
+                                {userList.map((user) => {
+                                  return user.id === currentNotification.user_id
+                                    ? user.full_name
+                                    : "";
+                                })}
+                              </label>
                             </div>
                             <div className="d-flex gap-2">
                               <Icon className="icon" icon="codicon:note" />
                               <label>
-                                {currentNotification?.comment.substring(0, 24) +
-                                  (currentNotification?.comment.length > 24
+                                {currentNotification?.comment?.substring(0, 24) +
+                                  (currentNotification?.comment?.length > 24
                                     ? "..."
                                     : "")}
                               </label>

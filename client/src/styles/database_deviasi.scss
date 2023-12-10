@@ -1,11 +1,26 @@
-.data-tervalidasi {
+.database-deviasi {
     .title {
         box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
         padding: 8px 16px;
         border-radius: 8px 8px 0 0;
 
-        h6 {
-            margin: 0px;
+        .analytics-tab {
+            button {
+                box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+
+                h6 {
+                    margin: 0px;
+                }
+
+                &:hover {
+                    color: #297209;
+                    background-image: linear-gradient(to right, #DFF4DF, #DFF4DF) !important;
+                }
+            }
+
+            .active {
+                pointer-events: none;
+            }
         }
 
         .input-group {
@@ -119,12 +134,25 @@
     }
 }
 
-.data-tervalidasi-light {
+.database-deviasi-light {
     .title {
         background-color: white;
 
         h6 {
             color: black;
+        }
+
+        .analytics-tab {
+            button {
+                color: black;
+                background-image: linear-gradient(to right, white, white) !important;
+            }
+
+            .active {
+                color: black;
+                border: solid 1px #297209 !important;
+                color: #297209 !important;
+            }
         }
 
         label {
@@ -207,12 +235,25 @@
     }
 }
 
-.data-tervalidasi-dark {
+.database-deviasi-dark {
     .title {
         background-color: #1E1E1E;
 
         h6 {
             color: white;
+        }
+
+        .analytics-tab {
+            button {
+                color: white;
+                background-image: linear-gradient(to right, #1E1E1E, #1E1E1E) !important;
+                border: 1px solid white !important;
+            }
+
+            .active {
+                color: #3B9315;
+                border: solid 1px #3B9315 !important;
+            }
         }
 
         label {
@@ -300,7 +341,7 @@
 }
 
 @media only screen and (max-width: 1530px) {
-    .data-tervalidasi {
+    .database-deviasi {
         .title {
             h6 {
                 font-size: 14px;
@@ -349,7 +390,7 @@
 }
 
 @media only screen and (max-width: 1230px) {
-    .data-tervalidasi {
+    .database-deviasi {
         .title {
             h6 {
                 font-size: 13px;

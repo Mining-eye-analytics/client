@@ -1,102 +1,169 @@
 import "../styles/cms.scss";
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
+import customAxios from "../axios/customAxios";
+import { useSelector, useDispatch } from "react-redux";
+import { getCctvList } from "../redux/cctvSlice";
 
 const CmsCctv = () => {
+  const dispatch = useDispatch();
+  const mode = useSelector((state) => state.general.mode);
+  const cctvList = useSelector((state) => state.cctv.list);
+
   const [action, setAction] = useState();
   const [currentCctv, setCurrentCctv] = useState();
   const [formMessage, setFormMessage] = useState("");
 
-  const [data, setData] = useState([
-    {
-      id: 1,
-      name: "BMO2",
-      location: "Ipdch031",
-      ip: "10.1.80.200",
-      link: "rtsp://10.1.80.200:8554/ipdch031",
-      username: "miningeyes",
-      password: "miningeyes",
-    },
-    {
-      id: 2,
-      name: "BMO2",
-      location: "Ipdch031",
-      ip: "10.1.80.200",
-      link: "rtsp://10.1.80.200:8554/ipdch031",
-      username: "miningeyes",
-      password: "miningeyes",
-    },
-    {
-      id: 3,
-      name: "BMO2",
-      location: "Ipdch031",
-      ip: "10.1.80.200",
-      link: "rtsp://10.1.80.200:8554/ipdch031",
-      username: "miningeyes",
-      password: "miningeyes",
-    },
-  ]);
-
   const [addDataForm, setAddDataForm] = useState({
-    id: data.length !== 0 ? data[data.length - 1]?.id + 1 : 1,
+    id: cctvList.length !== 0 ? cctvList[cctvList.length - 1]?.id + 1 : 1,
     name: "",
     location: "",
     ip: "",
-    link: "",
+    link_rtsp: "",
     username: "",
     password: "",
+    type_analytics: "",
   });
 
   const [editDataForm, setEditDataForm] = useState({});
 
-  useEffect(() => {
-    setAddDataForm({
-      id: data.length !== 0 ? data[data.length - 1]?.id + 1 : 1,
-      name: "",
-      location: "",
-      ip: "",
-      link: "",
-      username: "",
-      password: "",
-    });
+  const [analyticsTypeList, setAnalyticsTypeList] = useState([]);
 
-    setEditDataForm({});
-  }, [data]);
+  useEffect(() => {
+    customAxios({
+      method: "GET",
+      url: "/analytics/list",
+    })
+      .then((res) => {
+        let tempArr = [];
+        for (let i = 0; i < res.data.data.list_analytics.length; i++) {
+          tempArr.push({
+            id: i + 1,
+            type_analytics: res.data.data.list_analytics[i],
+          });
+        }
+        setAnalyticsTypeList(tempArr);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const addCctv = (addForm) => {
+    setFormMessage("");
     if (
       addForm.name !== "" &&
       addForm.location !== "" &&
       addForm.ip !== "" &&
-      addForm.link !== ""
+      addForm.link_rtsp !== ""
     ) {
-      setData((array) => [...array, addForm]);
+      customAxios({
+        method: "POST",
+        url: "/cctvs/create",
+        data: addForm,
+      })
+        .then((res) => {
+          dispatch(getCctvList());
+          setAddDataForm({
+            id:
+              cctvList.length !== 0 ? cctvList[cctvList.length - 1]?.id + 1 : 1,
+            name: "",
+            location: "",
+            ip: "",
+            link_rtsp: "",
+            username: "",
+            password: "",
+            type_analytics: "",
+          });
+          setEditDataForm({});
+        })
+        .catch((err) => {
+          if (err.message.includes("401")) {
+            setFormMessage("*anda tidak memiliki akses");
+            setAddDataForm({
+              id:
+                cctvList.length !== 0
+                  ? cctvList[cctvList.length - 1]?.id + 1
+                  : 1,
+              name: "",
+              location: "",
+              ip: "",
+              link_rtsp: "",
+              username: "",
+              password: "",
+              type_analytics: "",
+            });
+          }
+          console.log(err);
+        });
       setFormMessage("");
     } else {
       setFormMessage("*form tidak boleh kosong");
     }
   };
 
-  const editCctv = (editForm, index) => {
-    const temporaryData = data;
-    temporaryData[index] = editForm;
-    setData(temporaryData);
+  const editCctv = (editForm) => {
     setFormMessage("");
+    customAxios({
+      method: "PUT",
+      url: "/cctvs/" + editForm.id,
+      data: editForm,
+    })
+      .then((res) => {
+        dispatch(getCctvList());
+      })
+      .catch((err) => {
+        if (err.message.includes("401")) {
+          setFormMessage("*anda tidak memiliki akses");
+          setCurrentCctv();
+          setAction();
+          setEditDataForm({});
+        }
+        console.log(err);
+      });
   };
 
   const deleteCctv = (cctvId) => {
-    setData(data.filter((cctv) => cctv.id !== cctvId));
+    setFormMessage("");
+    customAxios({
+      method: "DELETE",
+      url: "/cctvs/" + cctvId,
+    })
+      .then((res) => {
+        dispatch(getCctvList());
+      })
+      .catch((err) => {
+        if (err.message.includes("401")) {
+          setFormMessage("*anda tidak memiliki akses");
+        }
+        console.log(err);
+      });
   };
 
-  const cctvArr = data.map((cctv, index) => {
+  const analyticsTypeArr = analyticsTypeList.map((type) => {
     return (
-      <tr className="align-middle">
+      <option value={type.type_analytics} key={type.id}>
+        {type.type_analytics === "AnalyticsCountingCrossing"
+          ? "Counting Crossing"
+          : type.type_analytics === "AnalyticsThreeClass"
+          ? "Tiga Kelas"
+          : "CCTV Stream"}
+      </option>
+    );
+  });
+
+  const cctvArr = cctvList.map((cctv, index) => {
+    return (
+      <tr className="align-middle" key={cctv.id}>
         <th className="text-center" scope="row">
           {cctv.id}
         </th>
         <td className="text-center">
           <input
-            className="form-control w-100"
+            className={
+              "form-control w-100" +
+              (currentCctv === cctv.id ? "" : " disabled")
+            }
             type="text"
             value={editDataForm.id !== cctv.id ? cctv.name : editDataForm.name}
             placeholder="Masukkan nama CCTV"
@@ -108,7 +175,10 @@ const CmsCctv = () => {
         </td>
         <td className="text-center">
           <input
-            className="form-control w-100"
+            className={
+              "form-control w-100" +
+              (currentCctv === cctv.id ? "" : " disabled")
+            }
             type="text"
             value={
               editDataForm.id !== cctv.id
@@ -124,7 +194,10 @@ const CmsCctv = () => {
         </td>
         <td className="text-center">
           <input
-            className="form-control w-100"
+            className={
+              "form-control w-100" +
+              (currentCctv === cctv.id ? "" : " disabled")
+            }
             type="text"
             value={editDataForm.id !== cctv.id ? cctv.ip : editDataForm.ip}
             placeholder="Masukkan IP RTSP"
@@ -136,19 +209,29 @@ const CmsCctv = () => {
         </td>
         <td className="text-center">
           <input
-            className="form-control w-100"
+            className={
+              "form-control w-100" +
+              (currentCctv === cctv.id ? "" : " disabled")
+            }
             type="text"
-            value={editDataForm.id !== cctv.id ? cctv.link : editDataForm.link}
+            value={
+              editDataForm.id !== cctv.id
+                ? cctv.link_rtsp
+                : editDataForm.link_rtsp
+            }
             placeholder="Masukkan link RTSP"
             disabled={currentCctv === cctv.id ? false : true}
             onChange={(e) => {
-              setEditDataForm({ ...editDataForm, link: e.target.value });
+              setEditDataForm({ ...editDataForm, link_rtsp: e.target.value });
             }}
           />
         </td>
         <td className="text-center">
           <input
-            className="form-control w-100"
+            className={
+              "form-control w-100" +
+              (currentCctv === cctv.id ? "" : " disabled")
+            }
             type="text"
             value={
               editDataForm.id !== cctv.id
@@ -164,7 +247,10 @@ const CmsCctv = () => {
         </td>
         <td className="text-center">
           <input
-            className="form-control w-100"
+            className={
+              "form-control w-100" +
+              (currentCctv === cctv.id ? "" : " disabled")
+            }
             type="text"
             value={
               editDataForm.id !== cctv.id
@@ -177,6 +263,29 @@ const CmsCctv = () => {
               setEditDataForm({ ...editDataForm, password: e.target.value });
             }}
           />
+        </td>
+        <td className="text-center">
+          <select
+            className={
+              "form-control form-select" +
+              (currentCctv === cctv.id ? "" : " disabled")
+            }
+            aria-label="Default select example"
+            value={
+              editDataForm.id !== cctv.id
+                ? cctv.type_analytics
+                : editDataForm.type_analytics
+            }
+            onChange={(e) => {
+              setEditDataForm({
+                ...editDataForm,
+                type_analytics: e.target.value,
+              });
+            }}
+            disabled={currentCctv !== cctv.id}
+          >
+            {analyticsTypeArr}
+          </select>
         </td>
         {currentCctv === cctv.id ? (
           <td className="text-center">
@@ -234,7 +343,12 @@ const CmsCctv = () => {
   });
 
   return (
-    <div className="dashboard d-flex flex-column gap-3">
+    <div
+      className={
+        "cms d-flex flex-column gap-3" +
+        (mode === "light" ? " cms-light" : " cms-dark")
+      }
+    >
       <div className="row m-0">
         <div className="col p-0">
           <h1>CMS - CCTV</h1>
@@ -255,12 +369,12 @@ const CmsCctv = () => {
               </label>
               <div className="d-flex justify-content-center align-items-end gap-1">
                 <div className="info-content d-flex align-items-end gap-1">
-                  <label>{data.length}</label>
+                  <label>{cctvList.length}</label>
                   <label>CCTV</label>
                 </div>
                 <div className="info-content">
                   <label></label>
-                  <label>-</label>
+                  <label>/</label>
                 </div>
                 <div className="info-content d-flex align-items-end gap-1">
                   <label>6</label>
@@ -268,9 +382,13 @@ const CmsCctv = () => {
                 </div>
               </div>
 
-              <div className="info-other d-flex justify-content-end align-items-center gap-1">
+              <div className="info-other d-flex justify-content-end gap-1">
                 <Icon className="icon" icon="carbon:location-filled" />
-                <label>BMO 2</label>
+                <label>
+                  {window.location.hostname === "localhost"
+                    ? "10.10.10.66"
+                    : window.location.hostname}
+                </label>
               </div>
             </div>
           </div>
@@ -282,17 +400,23 @@ const CmsCctv = () => {
               <div className="info-content d-flex justify-content-center align-items-end gap-1">
                 <label>HO - Indoor Finance</label>
               </div>
-              <div className="info-other d-flex justify-content-end align-items-center gap-1">
+              <div className="info-other d-flex justify-content-end gap-1">
                 <Icon className="icon" icon="bi:calendar-week" />
-                <label>30 Mei 2023</label>
+                <label>
+                  {new Date().getDate() +
+                    " " +
+                    new Date().toLocaleString("id-ID", { month: "long" }) +
+                    " " +
+                    new Date().getFullYear()}
+                </label>
               </div>
             </div>
           </div>
         </div>
         <div>
-          <div className="row m-0 mb-2">
+          <div className="cms-table-title row m-0 mb-2">
             <div className="col p-0">
-              <label>Daftar Pengguna</label>
+              <label>Daftar CCTV</label>
             </div>
             <div className="col p-0 d-flex justify-content-end">
               <label>{formMessage}</label>
@@ -324,6 +448,9 @@ const CmsCctv = () => {
                     Password
                   </th>
                   <th className="table-header" scope="col">
+                    Tipe Analitik
+                  </th>
+                  <th className="table-header" scope="col">
                     Aksi
                   </th>
                 </tr>
@@ -335,7 +462,9 @@ const CmsCctv = () => {
                   </th>
                   <td className="text-center">
                     <input
-                      className="form-control w-100"
+                      className={
+                        "form-control w-100" + (!currentCctv ? "" : " disabled")
+                      }
                       type="text"
                       value={addDataForm.name}
                       placeholder="Masukkan nama CCTV"
@@ -350,7 +479,9 @@ const CmsCctv = () => {
                   </td>
                   <td className="text-center">
                     <input
-                      className="form-control w-100"
+                      className={
+                        "form-control w-100" + (!currentCctv ? "" : " disabled")
+                      }
                       type="text"
                       value={addDataForm.location}
                       placeholder="Masukkan lokasi CCTV"
@@ -365,7 +496,9 @@ const CmsCctv = () => {
                   </td>
                   <td className="text-center">
                     <input
-                      className="form-control w-100"
+                      className={
+                        "form-control w-100" + (!currentCctv ? "" : " disabled")
+                      }
                       type="text"
                       value={addDataForm.ip}
                       placeholder="Masukkan IP RTSP"
@@ -380,22 +513,26 @@ const CmsCctv = () => {
                   </td>
                   <td className="text-center">
                     <input
-                      className="form-control w-100"
+                      className={
+                        "form-control w-100" + (!currentCctv ? "" : " disabled")
+                      }
                       type="text"
-                      value={addDataForm.link}
+                      value={addDataForm.link_rtsp}
                       placeholder="Masukkan link RTSP"
                       disabled={!currentCctv ? false : true}
                       onChange={(e) => {
                         setAddDataForm({
                           ...addDataForm,
-                          link: e.target.value,
+                          link_rtsp: e.target.value,
                         });
                       }}
                     />
                   </td>
                   <td className="text-center">
                     <input
-                      className="form-control w-100"
+                      className={
+                        "form-control w-100" + (!currentCctv ? "" : " disabled")
+                      }
                       type="text"
                       value={addDataForm.username}
                       placeholder="Masukkan username RTSP"
@@ -410,7 +547,9 @@ const CmsCctv = () => {
                   </td>
                   <td className="text-center">
                     <input
-                      className="form-control w-100"
+                      className={
+                        "form-control w-100" + (!currentCctv ? "" : " disabled")
+                      }
                       type="text"
                       value={addDataForm.password}
                       placeholder="Masukkan password RTSP"
@@ -424,13 +563,22 @@ const CmsCctv = () => {
                     />
                   </td>
                   <td className="text-center">
+                    <select
+                      className="form-control form-select disabled"
+                      aria-label="Default select example"
+                      disabled
+                    >
+                      {analyticsTypeArr}
+                    </select>
+                  </td>
+                  <td className="text-center">
                     <button
                       className="border-0"
                       onClick={() => {
                         addCctv(addDataForm);
                       }}
                     >
-                      Tambah Data
+                      <label className="button-green">Tambah Data</label>
                     </button>
                   </td>
                 </tr>

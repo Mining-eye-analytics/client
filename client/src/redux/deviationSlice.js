@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import customAxios from "../axios/customAxios";
 
 const initialState = {
   list: [],
   loading: false,
   current: undefined,
-  currentCctv: undefined,
+  currentCctv: { id: 0 },
   currentObject: "All",
+  currentCountingCrossingObject: "All",
   currentValidationStatus: "Tervalidasi",
   currentDate: [new Date(), new Date()],
   currentTime: ["00:01", "23:59"],
@@ -20,59 +21,54 @@ export const getDeviationList = createAsyncThunk(
   async (arg, { getState }) => {
     const state = getState();
 
-    return axios
-      .get(
-        window.location.protocol +
-          "//" +
-          (window.location.hostname === "localhost"
-            ? "10.10.10.66"
-            : window.location.hostname) +
-          ":" +
-          process.env.REACT_APP_API_PORT +
-          "/api/all-deviation?" +
-          (state.deviation.currentCctv !== undefined
-            ? "cctv_id=" + state.deviation.currentCctv + "&"
-            : "") +
-          (state.deviation.currentObject !== "All"
-            ? "type_object=" + state.deviation.currentObject + "&"
-            : "") +
-          (state.deviation.currentValidationStatus !== "All"
-            ? "filter_notification=" +
-              state.deviation.currentValidationStatus +
-              "&"
-            : "") +
-          "startDate=" +
-          (state.deviation.currentDate[0].getFullYear() +
-            "-" +
-            (state.deviation.currentDate[0].getMonth() + 1 < 10 ? "0" : "") +
-            (state.deviation.currentDate[0].getMonth() + 1) +
-            "-" +
-            (state.deviation.currentDate[0].getDate() < 10 ? "0" : "") +
-            state.deviation.currentDate[0].getDate()) +
-          " " +
-          (state.deviation.currentTime[0] !== null
-            ? state.deviation.currentTime[0]
-            : "00:01") +
-          "&" +
-          "endDate=" +
-          (state.deviation.currentDate[1].getFullYear() +
-            "-" +
-            (state.deviation.currentDate[1].getMonth() + 1 < 10 ? "0" : "") +
-            (state.deviation.currentDate[1].getMonth() + 1) +
-            "-" +
-            (state.deviation.currentDate[1].getDate() < 10 ? "0" : "") +
-            state.deviation.currentDate[1].getDate()) +
-          " " +
-          (state.deviation.currentTime[1] !== null
-            ? state.deviation.currentTime[1]
-            : "23:59"),
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      )
-      .then((res) => res.data.data);
+    return customAxios({
+      method: "GET",
+      url:
+        "/deviations/" +
+        (state.deviation.currentCctv.type_analytics !==
+        "AnalyticsCountingCrossing"
+          ? "v1"
+          : "crossing-counting") +
+        "?" +
+        (state.deviation.currentCctv.id !== 0
+          ? "cctv_id=" + state.deviation.currentCctv.id + "&"
+          : "") +
+        (state.deviation.currentObject !== "All"
+          ? "type_object=" + state.deviation.currentObject + "&"
+          : "") +
+        (state.deviation.currentValidationStatus !== "All" &&
+        state.deviation.currentCctv.type_analytics !==
+          "AnalyticsCountingCrossing"
+          ? "filter_notification=" +
+            state.deviation.currentValidationStatus +
+            "&"
+          : "") +
+        "startDate=" +
+        (state.deviation.currentDate[0].getFullYear() +
+          "-" +
+          (state.deviation.currentDate[0].getMonth() + 1 < 10 ? "0" : "") +
+          (state.deviation.currentDate[0].getMonth() + 1) +
+          "-" +
+          (state.deviation.currentDate[0].getDate() < 10 ? "0" : "") +
+          state.deviation.currentDate[0].getDate()) +
+        " " +
+        (state.deviation.currentTime[0] !== null
+          ? state.deviation.currentTime[0]
+          : "00:01") +
+        "&" +
+        "endDate=" +
+        (state.deviation.currentDate[1].getFullYear() +
+          "-" +
+          (state.deviation.currentDate[1].getMonth() + 1 < 10 ? "0" : "") +
+          (state.deviation.currentDate[1].getMonth() + 1) +
+          "-" +
+          (state.deviation.currentDate[1].getDate() < 10 ? "0" : "") +
+          state.deviation.currentDate[1].getDate()) +
+        " " +
+        (state.deviation.currentTime[1] !== null
+          ? state.deviation.currentTime[1]
+          : "23:59"),
+    }).then((res) => res.data.data);
   }
 );
 
@@ -88,6 +84,9 @@ const deviationSlice = createSlice({
     },
     setDeviationCurrentObject: (state, action) => {
       state.currentObject = action.payload;
+    },
+    setDeviationCurrentCountingCrossingObject: (state, action) => {
+      state.currentCountingCrossingObject = action.payload;
     },
     setDeviationCurrentValidationStatus: (state, action) => {
       state.currentValidationStatus = action.payload;
@@ -110,11 +109,14 @@ const deviationSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getDeviationList.pending, (state) => {
+      state.current = undefined;
       state.loading = true;
+      state.list = [];
     });
     builder.addCase(getDeviationList.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = action.payload;
+      state.list = action.payload === null ? [] : action.payload;
+      console.log(action.payload);
     });
     builder.addCase(getDeviationList.rejected, (state, action) => {
       state.loading = false;
@@ -128,6 +130,7 @@ export const {
   setCurrentDeviation,
   setDeviationCurrentCctv,
   setDeviationCurrentObject,
+  setDeviationCurrentCountingCrossingObject,
   setDeviationCurrentValidationStatus,
   setDeviationCurrentDate,
   setDeviationCurrentTime,

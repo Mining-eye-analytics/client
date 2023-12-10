@@ -1,5 +1,7 @@
 import "../styles/notification.scss";
 import "../styles/time_picker.css";
+import { useState, useEffect } from "react";
+import customAxios from "../axios/customAxios";
 import { Icon } from "@iconify/react";
 import Modal from "react-bootstrap/Modal";
 import { useSelector, useDispatch } from "react-redux";
@@ -21,6 +23,7 @@ const Notification = () => {
   const dispatch = useDispatch();
   const mode = useSelector((state) => state.general.mode);
   const page = useSelector((state) => state.general.page);
+  const currentCctv = useSelector((state) => state.cctv.current);
   const notificationList = useSelector((state) => state.notification.list);
   const notificationLoading = useSelector(
     (state) => state.notification.loading
@@ -45,6 +48,48 @@ const Notification = () => {
   );
   const alarmSound = useSelector((state) => state.notification.alarmSound);
   const alarmPopup = useSelector((state) => state.notification.alarmPopup);
+  const cctvList = useSelector((state) => state.cctv.list);
+
+  const [counting, setCounting] = useState([]);
+  const [currentCountingObject, setCurrentCountingObject] = useState("All");
+
+  useEffect(() => {
+    if (currentCctv?.id !== 0) {
+      customAxios({
+        method: "GET",
+        url:
+          "/deviations/crossing-counting/count-object?cctv_id=" +
+          currentCctv.id +
+          "&date=" +
+          new Date().toISOString().split("T")[0],
+      })
+        .then((res) => {
+          setCounting(res.data.data);
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [currentCctv]);
+
+  const countingCrossingObjectFilter = counting?.map((data) => {
+    return (
+      <li>
+        <button
+          className={
+            "dropdown-item" +
+            (currentCountingObject === data.object ? " active" : "")
+          }
+          onClick={() => {
+            setCurrentCountingObject(data.object);
+          }}
+        >
+          {data.object.charAt(0).toUpperCase() + data.object.slice(1)}
+        </button>
+      </li>
+    );
+  });
 
   const objectFilter = objectList.map((object) => {
     return (
@@ -89,8 +134,63 @@ const Notification = () => {
     );
   });
 
+  const countingCrossingNotificationArr = counting?.map((data) => {
+    if (currentCountingObject === "All") {
+      return (
+        <div>
+          <button className="border-0 text-start rounded-2 px-3 py-2 d-grid gap-2 w-100">
+            <div className="row m-0 align-items-center">
+              <div className="col-5 p-0">
+                <label>
+                  {data.object.charAt(0).toUpperCase() + data.object.slice(1)}
+                </label>
+              </div>
+            </div>
+            <div className="d-flex align-items-end gap-2">
+              <Icon className="icon" icon="eva:log-in-outline" />
+              <label>{"Objek In: " + data.count.in}</label>
+            </div>
+            <div className="d-flex align-items-end gap-2">
+              <Icon className="icon" icon="eva:log-out-outline" rotate={2} />
+              <label>{"Objek Out: " + data.count.out}</label>
+            </div>
+          </button>
+          <hr />
+        </div>
+      );
+    } else if (currentCountingObject === data.object) {
+      return (
+        <div>
+          <button className="border-0 text-start rounded-2 px-3 py-2 d-grid gap-2 w-100">
+            <div className="row m-0 align-items-center">
+              <div className="col-5 p-0">
+                <label>
+                  {data.object.charAt(0).toUpperCase() + data.object.slice(1)}
+                </label>
+              </div>
+            </div>
+            <div className="d-flex align-items-end gap-2">
+              <Icon className="icon" icon="eva:log-in-outline" />
+              <label>{"Objek In: " + data.count.in}</label>
+            </div>
+            <div className="d-flex align-items-end gap-2">
+              <Icon className="icon" icon="eva:log-out-outline" rotate={2} />
+              <label>{"Objek Out: " + data.count.out}</label>
+            </div>
+          </button>
+          <hr />
+        </div>
+      );
+    }
+  });
+
   const notificationArray = notificationList
-    .slice(0, notificationList.length - 1)
+    .slice(
+      0,
+      notificationList.length !== 1
+        ? notificationList.length - 1
+        : notificationList.length
+    )
     .map((notification, index) => {
       return (
         <div key={notification.id}>
@@ -120,7 +220,10 @@ const Notification = () => {
           >
             <div className="row m-0 align-items-center">
               <div className="col-5 p-0">
-                <label>{notification.type_object}</label>
+                <label>
+                  {notification.type_object.charAt(0).toUpperCase() +
+                    notification.type_object.slice(1)}
+                </label>
               </div>
               <div className="col-7 p-0 d-flex justify-content-end">
                 <label
@@ -143,7 +246,13 @@ const Notification = () => {
             </div>
             <div className="d-flex align-items-end gap-2">
               <Icon className="icon" icon="mdi:cctv" />
-              <label>{notification.name + " - " + notification.location}</label>
+              <label>
+                {cctvList.map((cctv) => {
+                  return cctv.id === notification.cctv_id
+                    ? cctv.name + " - " + cctv.location
+                    : "";
+                })}
+              </label>
             </div>
             <div className="d-flex align-items-end gap-2">
               <Icon className="icon" icon="akar-icons:clock" />
@@ -357,8 +466,20 @@ const Notification = () => {
       <div className="title mb-3">
         <div className="row m-0 align-items-center">
           <div className="col-8 p-0">
-            <h6>List Notifikasi</h6>
-            <label>List notifikasi deviasi</label>
+            <h6>
+              {currentCctv.type_analytics !== "AnalyticsCountingCrossing"
+                ? "List Notifikasi"
+                : "List Counting Crossing"}
+            </h6>
+            <label>
+              {currentCctv.type_analytics !== "AnalyticsCountingCrossing"
+                ? "List notifikasi deviasi"
+                : new Date().getDate() +
+                  " " +
+                  new Date().toLocaleString("id-ID", { month: "long" }) +
+                  " " +
+                  new Date().getFullYear()}
+            </label>
           </div>
           <div className="col p-0 d-flex justify-content-end gap-3">
             <div>
@@ -391,35 +512,71 @@ const Notification = () => {
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              {currentObject === "All" ? "Semua Deviasi" : currentObject}
+              {currentCctv.type_analytics !== "AnalyticsCountingCrossing"
+                ? currentObject === "All"
+                  ? "Semua Deviasi"
+                  : currentObject.charAt(0).toUpperCase() +
+                    currentObject.slice(1)
+                : currentCountingObject === "All"
+                ? "Semua Objek"
+                : currentCountingObject.charAt(0).toUpperCase() +
+                  currentCountingObject.slice(1)}
             </button>
-            <ul className="dropdown-menu">{objectFilter}</ul>
+            <ul className="dropdown-menu">
+              {currentCctv.type_analytics === "AnalyticsCountingCrossing" ? (
+                <li>
+                  <button
+                    className={
+                      "dropdown-item" +
+                      (currentCountingObject === "All" ? " active" : "")
+                    }
+                    onClick={() => {
+                      setCurrentCountingObject("All");
+                    }}
+                  >
+                    Semua Objek
+                  </button>
+                </li>
+              ) : (
+                ""
+              )}
+              {currentCctv.type_analytics !== "AnalyticsCountingCrossing"
+                ? objectFilter
+                : countingCrossingObjectFilter}
+            </ul>
           </div>
-          <div className="dropdown col d-flex justify-content-center p-0">
-            <button
-              className="btn dropdown-toggle border w-100"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              {currentValidationStatus === "All"
-                ? "Semua Status"
-                : currentValidationStatus === "Perlu Validasi"
-                ? "Belum Divalidasi"
-                : currentValidationStatus === "Tervalidasi"
-                ? "Sudah Divalidasi"
-                : currentValidationStatus === "true"
-                ? "Valid"
-                : "Tidak Valid"}
-            </button>
-            <ul className="dropdown-menu">{validationTypeFilter}</ul>
-          </div>
+
+          {currentCctv.type_analytics !== "AnalyticsCountingCrossing" ? (
+            <div className="dropdown col d-flex justify-content-center p-0">
+              <button
+                className="btn dropdown-toggle border w-100"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {currentValidationStatus === "All"
+                  ? "Semua Status"
+                  : currentValidationStatus === "Perlu Validasi"
+                  ? "Belum Divalidasi"
+                  : currentValidationStatus === "Tervalidasi"
+                  ? "Sudah Divalidasi"
+                  : currentValidationStatus === "true"
+                  ? "Valid"
+                  : "Tidak Valid"}
+              </button>
+              <ul className="dropdown-menu">{validationTypeFilter}</ul>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
         <hr />
         {notificationLoading === false ? (
           <div className="notification-list d-grid gap-2 overflow-auto">
             {notificationList.length !== 0 ? (
               notificationArray
+            ) : currentCctv.type_analytics === "AnalyticsCountingCrossing" ? (
+              countingCrossingNotificationArr
             ) : (
               <div className="d-flex justify-content-center">
                 <label className="data-not-found">

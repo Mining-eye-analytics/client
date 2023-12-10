@@ -3,7 +3,7 @@ import "../styles/calendar.css";
 import "../styles/time_picker.css";
 import DataTable from "../components/DataTable";
 import DataExport from "../components/DataExport";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import Calendar from "react-calendar";
 import TimePicker from "react-time-picker";
@@ -23,6 +23,9 @@ const DatabaseDeviasi = ({ setDate }) => {
   const mode = useSelector((state) => state.general.mode);
   const cctvList = useSelector((state) => state.cctv.list);
   const objectList = useSelector((state) => state.object.list);
+  const objectCountingCrossingList = useSelector(
+    (state) => state.object.countingCrossingList
+  );
   const validationStatusList = useSelector(
     (state) => state.validationStatus.list
   );
@@ -51,6 +54,10 @@ const DatabaseDeviasi = ({ setDate }) => {
     (state) => state.deviation.currentTablePage
   );
 
+  const [currentAnalyticsTab, setCurrentAnalyticsTab] = useState(
+    "AnalyticsThreeClass"
+  );
+
   const [dateStatus, setDateStatus] = useState("*pilih tanggal (start)");
 
   const timeHandler = (index, value) => {
@@ -62,17 +69,23 @@ const DatabaseDeviasi = ({ setDate }) => {
   };
 
   const cctvFilter = cctvList.map((cctv) => {
-    return (
-      <option key={cctv.id} value={cctv.id}>
-        {cctv.name + " - " + cctv.location}
-      </option>
-    );
+    if (currentAnalyticsTab === cctv.type_analytics) {
+      return (
+        <option key={cctv.id} value={JSON.stringify(cctv)}>
+          {cctv.name + " - " + cctv.location}
+        </option>
+      );
+    }
   });
 
-  const objectFilter = objectList.map((object) => {
+  const objectFilter = (
+    currentAnalyticsTab !== "AnalyticsCountingCrossing"
+      ? objectList
+      : objectCountingCrossingList
+  ).map((object) => {
     return (
       <option key={object.id} value={object.value}>
-        {object.name === "Semua" ? "Semua Objek" : object.name}
+        {object.name}
       </option>
     );
   });
@@ -88,14 +101,55 @@ const DatabaseDeviasi = ({ setDate }) => {
   return (
     <div
       className={
-        "data-tervalidasi" +
+        "database-deviasi" +
         (mode === "light"
-          ? " data-tervalidasi-light"
-          : " data-tervalidasi-dark")
+          ? " database-deviasi-light"
+          : " database-deviasi-dark")
       }
     >
       <div className="title d-grid gap-3 mb-3">
-        <h6>Database Deviasi</h6>
+        {cctvList.filter(
+          (cctv) => cctv.type_analytics === "AnalyticsCountingCrossing"
+        ).length === 0 ? (
+          <h6>Database Deviasi</h6>
+        ) : (
+          <div className="analytics-tab d-flex gap-3">
+            <button
+              className={
+                "border-0 rounded-2 px-3 py-2 d-flex align-items-center gap-1" +
+                (currentAnalyticsTab === "AnalyticsThreeClass" ? " active" : "")
+              }
+              onClick={() => {
+                setCurrentAnalyticsTab("AnalyticsThreeClass");
+                dispatch(setDeviationCurrentCctv({ id: 0 }));
+              }}
+            >
+              <h6>Pit Area</h6>
+            </button>
+            <button
+              className={
+                "border-0 rounded-2 px-3 py-2 d-flex align-items-center gap-1" +
+                (currentAnalyticsTab === "AnalyticsCountingCrossing"
+                  ? " active"
+                  : "")
+              }
+              onClick={() => {
+                setCurrentAnalyticsTab("AnalyticsCountingCrossing");
+                dispatch(
+                  setDeviationCurrentCctv(
+                    cctvList.filter((cctv) => {
+                      return (
+                        cctv.type_analytics === "AnalyticsCountingCrossing"
+                      );
+                    })[0]
+                  )
+                );
+              }}
+            >
+              <h6>Pit Crossing</h6>
+            </button>
+          </div>
+        )}
         <div className="d-xl-flex gap-4">
           <div className="d-grid gap-1 mb-xl-0 mb-3">
             <label>CCTV</label>
@@ -112,16 +166,26 @@ const DatabaseDeviasi = ({ setDate }) => {
                 id="inputGroupSelect01"
                 defaultValue={deviationCurrentCctv}
                 onChange={(value) => {
-                  dispatch(setDeviationCurrentCctv(value.target.value));
+                  dispatch(
+                    setDeviationCurrentCctv(JSON.parse(value.target.value))
+                  );
                 }}
               >
-                <option value={"All"}>Semua CCTV</option>
+                {currentAnalyticsTab !== "AnalyticsCountingCrossing" ? (
+                  <option value={JSON.stringify({ id: 0 })}>Semua CCTV</option>
+                ) : (
+                  ""
+                )}
                 {cctvFilter}
               </select>
             </div>
           </div>
           <div className="d-grid gap-1 mb-xl-0 mb-3">
-            <label>Deviasi</label>
+            <label>
+              {currentAnalyticsTab !== "AnalyticsCountingCrossing"
+                ? "Deviasi"
+                : "Objek"}
+            </label>
             <div
               className={
                 "input-group" + (deviationLoading === true ? " disabled" : "")
@@ -290,37 +354,44 @@ const DatabaseDeviasi = ({ setDate }) => {
               </div>
             </div>
           </div>
-          <div className="d-grid gap-1 mb-xl-0 mb-3">
-            <label>Status Validasi</label>
-            <div
-              className={
-                "input-group" + (deviationLoading === true ? " disabled" : "")
-              }
-            >
-              <label className="input-group-text" htmlFor="inputGroupSelect04">
-                <Icon className="filter-icon" icon="ci:check" />
-              </label>
-              <select
-                className="form-select"
-                id="inputGroupSelect04"
-                defaultValue={deviationCurrentValidationStatus}
-                onChange={(value) => {
-                  dispatch(
-                    setDeviationCurrentValidationStatus(value.target.value)
-                  );
-                }}
+          {currentAnalyticsTab !== "AnalyticsCountingCrossing" ? (
+            <div className="d-grid gap-1 mb-xl-0 mb-3">
+              <label>Status Validasi</label>
+              <div
+                className={
+                  "input-group" + (deviationLoading === true ? " disabled" : "")
+                }
               >
-                {validationTypeFilter}
-              </select>
+                <label
+                  className="input-group-text"
+                  htmlFor="inputGroupSelect04"
+                >
+                  <Icon className="filter-icon" icon="ci:check" />
+                </label>
+                <select
+                  className="form-select"
+                  id="inputGroupSelect04"
+                  defaultValue={deviationCurrentValidationStatus}
+                  onChange={(value) => {
+                    dispatch(
+                      setDeviationCurrentValidationStatus(value.target.value)
+                    );
+                  }}
+                >
+                  {validationTypeFilter}
+                </select>
+              </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
           <div className="col-xl d-xl-flex justify-content-end align-items-end">
-            <DataExport />
+            <DataExport currentAnalyticsTab={currentAnalyticsTab} />
           </div>
         </div>
       </div>
       <div className="content">
-        <DataTable />
+        <DataTable currentAnalyticsTab={currentAnalyticsTab} />
         <div>
           {deviationLoading === false ? (
             deviationList.length > 0 ? (

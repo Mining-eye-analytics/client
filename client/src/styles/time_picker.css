@@ -1,4 +1,4 @@
-.data-tervalidasi {
+.database-deviasi {
     .react-time-picker {
         display: inline-flex;
         position: relative;
@@ -126,7 +126,7 @@
     }
 }
 
-.data-tervalidasi-light {
+.database-deviasi-light {
     .react-time-picker {
         color: #757575;
     }
@@ -148,7 +148,7 @@
     }
 }
 
-.data-tervalidasi-dark {
+.database-deviasi-dark {
     .react-time-picker {
         color: white;
     }
@@ -171,7 +171,7 @@
 }
 
 @media only screen and (max-width: 1530px) {
-    .data-tervalidasi {
+    .database-deviasi {
         .react-time-picker {
             font-size: 12px;
         }
@@ -183,7 +183,7 @@
 }
 
 @media only screen and (max-width: 1230px) {
-    .data-tervalidasi {
+    .database-deviasi {
         .react-time-picker {
             font-size: 11px;
         }

@@ -1,4 +1,4 @@
-.data-tervalidasi {
+.database-deviasi {
     .react-calendar {
         width: 350px;
         max-width: 100%;
@@ -146,7 +146,7 @@
     }
 }
 
-.data-tervalidasi-light {
+.database-deviasi-light {
     .react-calendar {
         background: white;
     }
@@ -176,7 +176,7 @@
     }
 }
 
-.data-tervalidasi-dark {
+.database-deviasi-dark {
     .react-calendar {
         background: #1E1E1E;
     }
@@ -207,7 +207,7 @@
 }
 
 @media only screen and (max-width: 1530px) {
-    .data-tervalidasi {
+    .database-deviasi {
         .react-calendar {
             width: 330px;
             line-height: 1.10em;
@@ -217,7 +217,7 @@
 }
 
 @media only screen and (max-width: 1230px) {
-    .data-tervalidasi {
+    .database-deviasi {
         .react-calendar {
             width: 310px;
             line-height: 1em;

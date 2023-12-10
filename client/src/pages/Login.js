@@ -1,9 +1,9 @@
-// inporting style
+// importing style
 import "../styles/login.scss";
 
 // importing libraries
 import { useState, useEffect } from "react";
-import axios from "axios";
+import customAxios from "../axios/customAxios";
 import { Icon } from "@iconify/react";
 import { useSelector } from "react-redux";
 
@@ -27,28 +27,25 @@ const Login = () => {
         setLoginMessage("username dan password tidak boleh kosong");
       } else {
         setLoginLoading(true);
-        axios
-          .post(
-            window.location.protocol +
-              "//" +
-              (window.location.hostname === "localhost"
-                ? "10.10.10.66"
-                : window.location.hostname) +
-              ":" +
-              process.env.REACT_APP_API_PORT +
-              "/api/login",
-            {
-              username: username,
-              password: password,
-            }
-          )
+        customAxios({
+          method: "POST",
+          url: "/users/login",
+          data: {
+            username: username,
+            password: password,
+          },
+        })
           .then((res) => {
             setLoginStatus(res.data.meta.status);
-            localStorage.setItem("token", res.data.data.token);
-            localStorage.setItem("role", res.data.data.role);
-            localStorage.setItem("id", res.data.data.id);
-            localStorage.setItem("name", res.data.data.name);
-            localStorage.setItem("username", res.data.data.username);
+            localStorage.setItem(
+              "authorization",
+              JSON.stringify({
+                user_id: res.data.data.id,
+                user_name: res.data.data.full_name,
+                user_role: res.data.data.role,
+                bearer_token: res.data.data.token,
+              })
+            );
           })
           .catch((err) => {
             setLoginStatus("failed");
@@ -72,7 +69,6 @@ const Login = () => {
     }
   }, [loginStatus]);
 
-  // rendering UI by returning HTML elements
   return (
     <div
       className={
@@ -143,7 +139,9 @@ const Login = () => {
                 <div className="d-grid">
                   <button
                     className="border-0 rounded-2 px-3 py-2"
-                    onClick={loginHandler}
+                    onClick={() => {
+                      loginHandler("Enter");
+                    }}
                   >
                     Masuk
                   </button>

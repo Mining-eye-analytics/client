@@ -1,10 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit'
-import generalSlice from './generalSlice'
-import cctvSlice from './cctvSlice'
-import notificationSlice from './notificationSlice'
-import objectSlice from './objectSlice'
-import validationStatusSlice from './validationStatusSlice'
-import deviationSlice from './deviationSlice'
+import { configureStore } from "@reduxjs/toolkit";
+import generalSlice from "./generalSlice";
+import cctvSlice from "./cctvSlice";
+import notificationSlice from "./notificationSlice";
+import objectSlice from "./objectSlice";
+import validationStatusSlice from "./validationStatusSlice";
+import deviationSlice from "./deviationSlice";
+import userSlice from "./userSlice";
 
 export default configureStore({
   reducer: {
@@ -14,9 +15,10 @@ export default configureStore({
     object: objectSlice,
     validationStatus: validationStatusSlice,
     deviation: deviationSlice,
+    user: userSlice,
   },
-  middleware: getDefaultMiddleware =>
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
     }),
-})
+});

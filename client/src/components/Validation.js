@@ -1,6 +1,6 @@
 import "../styles/validation.scss";
 import { useState } from "react";
-import axios from "axios";
+import customAxios from "../axios/customAxios";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setCurrentNotification,
@@ -23,34 +23,25 @@ const Validation = () => {
   const [textareaValue, setTextareaValue] = useState("");
 
   const submitHandler = () => {
-    axios({
-      method: "put",
-      url:
-        window.location.protocol +
-        "//" +
-        (window.location.hostname === "localhost"
-          ? "10.10.10.66"
-          : window.location.hostname) +
-        ":" +
-        process.env.REACT_APP_API_PORT +
-        "/api/deviation/" +
-        currentNotification?.id,
+    customAxios({
+      method: "PUT",
+      url: "/deviations/" + currentNotification?.id,
       data: {
         type_validation: validationStatus,
         comment:
           (operatorName !== ""
             ? "Operator terdeteksi: " + operatorName + ". "
             : "") +
-          validationCommentData.join(", ") +
+          (validationCommentData[0] !== undefined
+            ? validationCommentData.length > 1
+              ? validationCommentData.join(", ")
+              : validationCommentData[0]
+            : "") +
           (validationCommentData.length > 0 && textareaValue.length > 0
             ? ", "
             : "") +
           (textareaValue.length > 0 ? textareaValue : ""),
-        user_id: localStorage.getItem("id"),
-      },
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: "Bearer " + localStorage.getItem("token"),
+        user_id: JSON.parse(localStorage.getItem("authorization"))?.user_id,
       },
     })
       .then((res) => {
@@ -63,7 +54,7 @@ const Validation = () => {
 
   const trueCommentData = [
     { id: 1, value: "Pengawas/manusia berada diluar unit" },
-    { id: 2, value: "Pengawas/manusia berda diluar kabin" },
+    { id: 2, value: "Pengawas/manusia berada diluar kabin" },
     { id: 3, value: "HD tidak menjaga jarak iring (40m)" },
     { id: 4, value: "LV tidak memeliki izin memasuki area tambang" },
   ];
@@ -306,7 +297,10 @@ const Validation = () => {
                       }, 2000);
                       dispatch(
                         setCurrentNotification({
+                          avg_panjang_bbox_hd:
+                            currentNotification?.avg_panjang_bbox_hd,
                           cctv_id: currentNotification?.cctv_id,
+                          children: currentNotification?.children,
                           comment:
                             (operatorName !== ""
                               ? "Operator terdeteksi: " + operatorName + ". "
@@ -317,18 +311,17 @@ const Validation = () => {
                           created_at: currentNotification?.created_at,
                           id: currentNotification?.id,
                           image: currentNotification?.image,
-                          ip: currentNotification?.ip,
-                          location: currentNotification?.location,
-                          name: currentNotification?.name,
+                          parent_id: currentNotification?.parent_id,
                           path: currentNotification?.path,
                           realtime_images_id:
                             currentNotification?.realtime_images_id,
                           type_object: currentNotification?.type_object,
                           type_validation: validationStatus.toString(),
                           updated_at: new Date(),
-                          user_id: localStorage.getItem("id"),
-                          user_name: localStorage.getItem("name"),
-                          username: localStorage.getItem("username"),
+                          user_id: parseInt(
+                            JSON.parse(localStorage.getItem("authorization"))
+                              ?.user_id
+                          ),
                           violate_count: currentNotification?.violate_count,
                         })
                       );

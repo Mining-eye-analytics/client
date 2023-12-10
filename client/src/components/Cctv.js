@@ -5,7 +5,6 @@ import {
   deleteDeviationIndicatedCctv,
 } from "../redux/cctvSlice";
 import {
-  setNotificationCurrentCctv,
   setCurrentNotification,
   setNotificationLimit,
   showNotificationChild,
@@ -27,7 +26,8 @@ const Cctv = () => {
   };
 
   const cctvArray = cctvList.map((cctv, index) => {
-    return (
+    return page !== "validasi-notifikasi" ||
+      cctv.type_analytics !== "AnalyticsCountingCrossing" ? (
       <button
         key={cctv.id}
         className={
@@ -36,16 +36,15 @@ const Cctv = () => {
         }
         onClick={() => {
           dispatch(setCurrentCctv(cctvList[index]));
-          dispatch(setNotificationCurrentCctv(cctv.id));
           dispatch(setCurrentNotification());
           dispatch(showNotificationChild());
           dispatch(setNotificationLimit(10));
-          dispatch(deleteDeviationIndicatedCctv(cctv.id?.toString()));
+          dispatch(deleteDeviationIndicatedCctv(cctv.id));
         }}
       >
         <div className="row align-items-center">
           <div className="col">{cctv.name + " - " + cctv.location}</div>
-          {deviationIndicatedCctv.includes(cctv.id?.toString()) ? (
+          {deviationIndicatedCctv.includes(cctv.id) && currentCctv.id !== cctv.id ? (
             <div className="col-1 p-0">
               <div></div>
             </div>
@@ -54,6 +53,8 @@ const Cctv = () => {
           )}
         </div>
       </button>
+    ) : (
+      ""
     );
   });
 
@@ -78,7 +79,6 @@ const Cctv = () => {
                       id: 0,
                     })
                   );
-                  dispatch(setNotificationCurrentCctv(0));
                   dispatch(setCurrentNotification());
                   dispatch(showNotificationChild());
                   dispatch(setNotificationLimit(10));

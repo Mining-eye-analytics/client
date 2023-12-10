@@ -1,6 +1,6 @@
 import "../styles/assets.scss";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import customAxios from "../axios/customAxios";
 
 const Assets = ({ mode, setAssetsError }) => {
   const [imageLoading, setImageLoading] = useState(false);
@@ -8,24 +8,11 @@ const Assets = ({ mode, setAssetsError }) => {
 
   useEffect(() => {
     setImageLoading(true);
-    axios
-      .get(
-        window.location.protocol +
-          "//" +
-          (window.location.hostname === "localhost"
-            ? "10.10.10.66"
-            : window.location.hostname) +
-          ":" +
-          process.env.REACT_APP_API_PORT +
-          "/api" +
-          window.location.pathname,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-          responseType: "arraybuffer",
-        }
-      )
+    customAxios({
+      method: "GET",
+      url: "/analytics" + window.location.pathname,
+      responseType: "arraybuffer",
+    })
       .then((res) => {
         let blob = new Blob([res.data], {
           type: res.headers["content-type"],

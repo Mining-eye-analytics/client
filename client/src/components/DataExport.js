@@ -1,13 +1,14 @@
 import "../styles/data_export.scss";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import customAxios from "../axios/customAxios";
 import dayjs from "dayjs";
 import { Icon } from "@iconify/react";
 import * as XLSX from "xlsx";
 import { useSelector } from "react-redux";
 
-const DataExport = () => {
+const DataExport = ({ currentAnalyticsTab }) => {
   const mode = useSelector((state) => state.general.mode);
+  const userList = useSelector((state) => state.user.list);
   const cctvList = useSelector((state) => state.cctv.list);
   const deviationList = useSelector((state) => state.deviation.list);
   const deviationCurrentDate = useSelector(
@@ -18,23 +19,12 @@ const DataExport = () => {
   );
   const [exportData, setExportData] = useState([]);
   const [notificationCctvData, setNotificationCctvData] = useState({});
-  const [notificationCctvDataLoading, setNotificationCctvDataLoading] =
-    useState(true);
   const [notificationObjectData, setNotificationObjectData] = useState({});
-  const [notificationObjectDataLoading, setNotificationObjectDataLoading] =
-    useState(true);
 
   useEffect(() => {
-    axios({
+    customAxios({
       method: "GET",
       url:
-        window.location.protocol +
-        "//" +
-        (window.location.hostname === "localhost"
-          ? "10.10.10.66"
-          : window.location.hostname) +
-        ":" +
-        process.env.REACT_APP_API_PORT +
         "/api/count_cctv?startDate=" +
         dayjs(
           new Date(deviationCurrentDate[0]).setHours(
@@ -51,9 +41,6 @@ const DataExport = () => {
             "00"
           )
         ).format("YYYY-MM-DD HH:mm:ss"),
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
     })
       .then((res) => {
         const data = res.data.data;
@@ -70,23 +57,13 @@ const DataExport = () => {
         }
         setNotificationCctvData(tempData);
       })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        setNotificationCctvDataLoading(false);
-      });
+      .catch((err) => console.log(err));
   }, [deviationCurrentDate, deviationCurrentTime]);
 
   useEffect(() => {
-    axios({
+    customAxios({
       method: "GET",
       url:
-        window.location.protocol +
-        "//" +
-        (window.location.hostname === "localhost"
-          ? "10.10.10.66"
-          : window.location.hostname) +
-        ":" +
-        process.env.REACT_APP_API_PORT +
         "/api/count_object?startDate=" +
         dayjs(
           new Date(deviationCurrentDate[0]).setHours(
@@ -103,9 +80,6 @@ const DataExport = () => {
             "00"
           )
         ).format("YYYY-MM-DD HH:mm:ss"),
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
     })
       .then((res) => {
         const data = res.data.data;
@@ -122,47 +96,90 @@ const DataExport = () => {
         }
         setNotificationObjectData(tempData);
       })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        setNotificationObjectDataLoading(false);
-      });
+      .catch((err) => console.log(err));
   }, [deviationCurrentDate, deviationCurrentTime]);
 
   useEffect(() => {
-    const tempData = deviationList.map((item) => ({
-      ID: item.id,
-      ID_Grup_Data: item.parent_id,
-      Tanggal: item.created_at.substring(5, 16),
-      Validator: item.user_name,
-      SID: item.username,
-      CCTV:
-        cctvList.filter((cctv) => item.cctv_id === cctv.id)[0].name +
-        " - " +
-        cctvList.filter((cctv) => item.cctv_id === cctv.id)[0].location,
-      Status_Validasi:
-        item.type_validation.charAt(0).toUpperCase() +
-        item.type_validation.slice(1),
-      Objek:
-        item.type_object.charAt(0).toUpperCase() + item.type_object.slice(1),
-      Deskripsi_Validasi: item.comment,
-      Nama_Gambar: item.image,
-      Waktu_Capture: item.created_at,
-      Waktu_Validasi: item.updated_at,
-      Link_Gambar:
-        window.location.protocol +
-        "//" +
-        (window.location.hostname === "localhost"
-          ? "10.10.10.66"
-          : window.location.hostname) +
-        "/" +
-        item.path +
-        item.image,
-    }));
+    const tempData =
+      currentAnalyticsTab !== "AnalyticsCountingCrossing"
+        ? deviationList.map((item) => ({
+            ID: item.id,
+            ID_Grup_Data: item.parent_id,
+            Tanggal: item.created_at.substring(5, 16),
+            Validator:
+              item.user_id !== null
+                ? userList.filter((user) => item.user_id === user.id)[0]
+                    .full_name
+                : null,
+            SID:
+              item.user_id !== null
+                ? userList.filter((user) => item.user_id === user.id)[0]
+                    .username
+                : null,
+            CCTV:
+              cctvList.filter((cctv) => item.cctv_id === cctv.id)[0].name +
+              " - " +
+              cctvList.filter((cctv) => item.cctv_id === cctv.id)[0].location,
+            Status_Validasi:
+              item.type_validation.charAt(0).toUpperCase() +
+              item.type_validation.slice(1),
+            Objek:
+              item.type_object.charAt(0).toUpperCase() +
+              item.type_object.slice(1),
+            Deskripsi_Validasi: item.comment,
+            Nama_Gambar: item.image,
+            Waktu_Capture: item.created_at,
+            Waktu_Validasi: item.updated_at,
+            Link_Gambar:
+              window.location.protocol +
+              "//" +
+              (window.location.hostname === "localhost"
+                ? "10.10.10.66"
+                : window.location.hostname) +
+              "/" +
+              item.path +
+              item.image,
+          }))
+        : deviationList.map((item) => ({
+            ID: item.id,
+            Tanggal: item.created_at.substring(5, 16),
+            Jam: item.created_at.substring(17, 24),
+            Shift:
+              parseInt(item.created_at.substring(17, 19)) > 5 &&
+              parseInt(item.created_at.substring(17, 19)) < 18
+                ? "1"
+                : "2",
+            CCTV:
+              cctvList.filter((cctv) => item.cctv_id === cctv.id)[0].name +
+              " - " +
+              cctvList.filter((cctv) => item.cctv_id === cctv.id)[0].location,
+            Objek:
+              item.type_object.charAt(0).toUpperCase() +
+              item.type_object.slice(1),
+            Arah:
+              item.direction.charAt(0).toUpperCase() + item.direction.slice(1),
+            Jumlah_Objek: item.count,
+            Nama_Gambar: item.image,
+            Waktu_Capture: item.created_at,
+            Link_Gambar:
+              window.location.protocol +
+              "//" +
+              (window.location.hostname === "localhost"
+                ? "10.10.10.66"
+                : window.location.hostname) +
+              "/" +
+              item.path +
+              item.image,
+          }));
 
     setExportData(tempData);
   }, [deviationList]);
 
-  const downloadWeeklyData = (exportData) => {
+  const downloadWeeklyData = (
+    exportData,
+    notificationCctvData,
+    notificationObjectData
+  ) => {
     const fileName =
       new Date().getDate() +
       "-" +
@@ -228,25 +245,29 @@ const DataExport = () => {
       className={
         "button-group d-flex align-items-center gap-3" +
         (mode === "light" ? " button-group-light" : " button-group-dark") +
-        (exportData.length === 0 ||
-        notificationCctvDataLoading ||
-        notificationObjectDataLoading
-          ? " d-none"
-          : "")
+        (exportData.length === 0 ? " d-none" : "")
       }
     >
-      <button
+      {/* <button
         className={
           "export-weekly border-0 rounded-2 px-3 py-1" +
-          (localStorage.getItem("role") !== "admin" ? " d-none" : "")
+          (currentAnalyticsTab === "AnalyticsCountingCrossing" ||
+          JSON.parse(localStorage.getItem("authorization"))?.user_role !==
+            "super_admin"
+            ? " d-none"
+            : "")
         }
         onClick={() => {
-          downloadWeeklyData(exportData);
+          downloadWeeklyData(
+            exportData,
+            notificationCctvData,
+            notificationObjectData
+          );
         }}
       >
         <Icon className="icon me-1" icon="entypo:export" />
         <label>Export Weekly</label>
-      </button>
+      </button> */}
       <button
         className="export border-0 rounded-2 px-3 py-1"
         onClick={() => {

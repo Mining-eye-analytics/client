@@ -13,12 +13,16 @@ import DatabaseDeviasi from "./DatabaseDeviasi";
 // importing libraries
 import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
-import socketIOClient from "socket.io-client";
+import { io } from "socket.io-client";
 import { useSelector, useDispatch } from "react-redux";
 
 // importing redux actions
 import { setMode, setPage } from "../redux/generalSlice";
-import { getCctvList, addDeviationIndicatedCctv } from "../redux/cctvSlice";
+import {
+  getCctvList,
+  setCurrentCctv,
+  addDeviationIndicatedCctv,
+} from "../redux/cctvSlice";
 import {
   getNotificationList,
   addSocketNotification,
@@ -33,16 +37,16 @@ import {
   setTablePageDataLimit,
   setCurrentTablePage,
 } from "../redux/deviationSlice";
+import { getUserList } from "../redux/userSlice";
 
 const Main = () => {
   // defining state variabels with redux
   const dispatch = useDispatch();
   const mode = useSelector((state) => state.general.mode);
   const page = useSelector((state) => state.general.page);
-  
-  const notificationCurrentCctv = useSelector(
-    (state) => state.notification.currentCctv
-  );
+
+  const currentCctv = useSelector((state) => state.cctv.current);
+
   const currentObject = useSelector((state) => state.object.current);
   const currentValidationStatus = useSelector(
     (state) => state.validationStatus.current
@@ -77,29 +81,30 @@ const Main = () => {
 
   // react hooks to trigger getCctvList function running once in initial rendering
   useEffect(() => {
+    dispatch(getUserList());
     dispatch(getCctvList());
   }, []);
 
-  // react hooks to trigger getNotificationList function running once in initial rendering and every time the value of notificationCurrentCctv, currentObject, currentValidationStatus, submit, reload, and notificationLimit changes
+  // react hooks to trigger getNotificationList function running once in initial rendering and every time the value of currentCctv, currentObject, currentValidationStatus, submit, reload, and notificationLimit changes
   useEffect(() => {
     dispatch(getNotificationList());
   }, [
-    notificationCurrentCctv,
+    currentCctv,
     currentObject,
     currentValidationStatus,
     submit,
-    reload === true ? notificationLimit : notificationCurrentCctv,
+    reload === true ? notificationLimit : currentCctv,
   ]);
 
   // socket.io variable to connect client to server
-  const socket = socketIOClient(
+  const socket = io(
     window.location.protocol +
       "//" +
       (window.location.hostname === "localhost"
         ? "10.10.10.66"
         : window.location.hostname) +
       ":" +
-      process.env.REACT_APP_API_PORT,
+      5103,
     {
       transports: ["polling"],
       cors: {
@@ -108,7 +113,7 @@ const Main = () => {
     }
   );
 
-  // react hooks to connect client to server with socket.io and change notification state variabels every time the value of notificationCurrentCctv, currentObject, currentValidationStatus, reload, and notificationLimit changes
+  // react hooks to connect client to server with socket.io and change notification state variabels every time the value of currentCctv, currentObject, currentValidationStatus, reload, and notificationLimit changes
   useEffect(() => {
     socket.on("message_from_server", (data) => newNotifHandler(data));
     if (socket.connected === false) {
@@ -119,7 +124,7 @@ const Main = () => {
       socket.off("message_from_server");
     };
   }, [
-    notificationCurrentCctv,
+    currentCctv,
     currentObject,
     currentValidationStatus,
     reload,
@@ -136,8 +141,8 @@ const Main = () => {
         currentValidationStatus === "Butuh Validasi"
       ) {
         if (notification.parent_id === null) {
-          if (notificationCurrentCctv !== 0) {
-            if (notificationCurrentCctv.toString() === notification.cctv_id) {
+          if (currentCctv.id !== 0) {
+            if (currentCctv.id.toString() === notification.cctv_id) {
               if (currentObject === "All") {
                 dispatch(addSocketNotification(notification));
                 dispatch(reloadNotification(false));
@@ -183,8 +188,8 @@ const Main = () => {
             }
           }
         } else {
-          if (notificationCurrentCctv !== 0) {
-            if (notificationCurrentCctv.toString() === notification.cctv_id) {
+          if (currentCctv.id !== 0) {
+            if (currentCctv.id.toString() === notification.cctv_id) {
               if (currentObject === "All") {
                 dispatch(addNotificationChild(notification));
               } else {
@@ -236,7 +241,6 @@ const Main = () => {
     deviationCurrentTime,
   ]);
 
-  // rendering UI by returning html elements
   return (
     <div className={"main" + (mode === "light" ? " main-light" : " main-dark")}>
       <nav className="navbar navbar-expand-lg">
@@ -277,6 +281,12 @@ const Main = () => {
                   }
                   onClick={() => {
                     dispatch(setPage("validasi-notifikasi"));
+                    if (
+                      currentCctv.type_analytics === "AnalyticsCountingCrossing"
+                    ) {
+                      dispatch(setCurrentCctv({ id: 0 }));
+                      dispatch(getNotificationList());
+                    }
                     window.history.replaceState(
                       null,
                       null,
@@ -357,15 +367,19 @@ const Main = () => {
                       className="dropdown-item disabled text-center"
                       href="#"
                     >
-                      {localStorage.getItem("name")}
+                      {
+                        JSON.parse(localStorage.getItem("authorization"))
+                          ?.user_name
+                      }
                     </label>
                   </li>
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
-                  {/* <li
+                  <li
                     className={
-                      localStorage.getItem("role") === "super_admin"
+                      JSON.parse(localStorage.getItem("authorization"))
+                        ?.user_role === "super_admin"
                         ? ""
                         : "d-none"
                     }
@@ -379,12 +393,12 @@ const Main = () => {
                       <Icon className="fs-5" icon="mingcute:grid-2-fill" />
                       <label>Dashboard</label>
                     </button>
-                  </li> */}
+                  </li>
                   <li>
                     <button
                       className="log-out dropdown-item d-flex align-items-center gap-2"
                       onClick={() => {
-                        localStorage.clear();
+                        localStorage.removeItem("authorization");
                         window.location.href = "/login";
                         window.location.reload();
                       }}
@@ -401,16 +415,16 @@ const Main = () => {
       </nav>
       <div className="container mt-3">
         <div className={page !== "database-deviasi" ? "row" : ""}>
-          <div className="col-xl-3 mb-xl-0 mb-5">
-            {page === "live-monitoring" || page === "validasi-notifikasi" ? (
+          {page === "live-monitoring" || page === "validasi-notifikasi" ? (
+            <div className="col-xl-3 mb-xl-0 mb-5">
               <Cctv />
-            ) : (
-              ""
-            )}
-          </div>
+            </div>
+          ) : (
+            ""
+          )}
           <div
             className={
-              "col-xl mb-xl-0" + (page !== "database-deviasi" ? " mb-5" : "")
+              "mb-xl-0" + (page !== "database-deviasi" ? " col-xl mb-5" : "")
             }
           >
             {page === "live-monitoring" ? (
@@ -421,13 +435,13 @@ const Main = () => {
               <DatabaseDeviasi setDate={setDate} />
             )}
           </div>
-          <div className="col-xl-3">
-            {page === "live-monitoring" || page === "validasi-notifikasi" ? (
+          {page === "live-monitoring" || page === "validasi-notifikasi" ? (
+            <div className="col-xl-3">
               <Notification />
-            ) : (
-              ""
-            )}
-          </div>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>

@@ -1,11 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import customAxios from "../axios/customAxios";
 
 const initialState = {
   list: [],
   loading: false,
   current: undefined,
-  currentCctv: 0,
   currentObject: "All",
   currentValidationStatus: "All",
   limit: 10,
@@ -22,36 +21,24 @@ export const getNotificationList = createAsyncThunk(
   async (arg, { getState }) => {
     const state = getState();
 
-    return axios
-      .get(
-        window.location.protocol +
-          "//" +
-          (window.location.hostname === "localhost"
-            ? "10.10.10.66"
-            : window.location.hostname) +
-          ":" +
-          process.env.REACT_APP_API_PORT +
-          "/api/deviation?" +
-          (state.notification.currentCctv !== 0
-            ? "cctv_id=" + state.notification.currentCctv + "&"
-            : "") +
-          (state.notification.currentObject !== "All"
-            ? "type_object=" + state.notification.currentObject + "&"
-            : "") +
-          (state.notification.currentValidationStatus !== "All"
-            ? "filter_notification=" +
-              state.notification.currentValidationStatus +
-              "&"
-            : "") +
-          "limit=" +
-          (state.notification.limit + 1),
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      )
-      .then((res) => res.data.data);
+    return customAxios({
+      method: "GET",
+      url:
+        "/deviations/v2?" +
+        (state.cctv.current.id !== 0
+          ? "cctv_id=" + state.cctv.current.id + "&"
+          : "") +
+        (state.notification.currentObject !== "All"
+          ? "type_object=" + state.notification.currentObject + "&"
+          : "") +
+        (state.notification.currentValidationStatus !== "All"
+          ? "filter_notification=" +
+            state.notification.currentValidationStatus +
+            "&"
+          : "") +
+        "limit=" +
+        (state.notification.limit + 1),
+    }).then((res) => res.data.data);
   }
 );
 
@@ -64,9 +51,6 @@ const notificationSlice = createSlice({
     },
     setCurrentNotification: (state, action) => {
       state.current = action.payload;
-    },
-    setNotificationCurrentCctv: (state, action) => {
-      state.currentCctv = action.payload;
     },
     setNotificationCurrentObject: (state, action) => {
       state.currentObject = action.payload;
@@ -98,12 +82,16 @@ const notificationSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getNotificationList.pending, (state) => {
+      state.current = undefined;
       state.loading = true;
+      state.list = [];
     });
     builder.addCase(getNotificationList.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = action.payload;
-      state.current = action.payload[0];
+      state.list = action.payload === null ? [] : action.payload;
+      if (state.current === undefined && state.list.length > 0) {
+        state.current = state.list[0];
+      }
     });
     builder.addCase(getNotificationList.rejected, (state, action) => {
       state.loading = false;
@@ -116,7 +104,6 @@ const notificationSlice = createSlice({
 export const {
   addSocketNotification,
   setCurrentNotification,
-  setNotificationCurrentCctv,
   setNotificationCurrentObject,
   setNotificationCurrentValidationStatus,
   setNotificationLimit,

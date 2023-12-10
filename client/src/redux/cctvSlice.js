@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import customAxios from "../axios/customAxios";
 
 const initialState = {
   list: [],
@@ -9,23 +9,9 @@ const initialState = {
 };
 
 export const getCctvList = createAsyncThunk("cctv/getCctvList", () => {
-  return axios
-    .get(
-      window.location.protocol +
-        "//" +
-        (window.location.hostname === "localhost"
-          ? "10.10.10.66"
-          : window.location.hostname) +
-        ":" +
-        process.env.REACT_APP_API_PORT +
-        "/api/cctv",
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      }
-    )
-    .then((res) => res.data.data);
+  return customAxios({ method: "GET", url: "/cctvs" }).then(
+    (res) => res.data.data
+  );
 });
 
 const cctvSlice = createSlice({

@@ -1,8 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  mode:
-    new Date().getHours() > 7 && new Date().getHours() < 18 ? "light" : "dark",
+  mode: localStorage.getItem("mode")
+    ? localStorage.getItem("mode")
+    : new Date().getHours() > 7 && new Date().getHours() < 18
+    ? "light"
+    : "dark",
   page: window.location.href.includes("database-deviasi")
     ? "database-deviasi"
     : window.location.href.includes("live-monitoring")
@@ -16,6 +19,7 @@ const generalSlice = createSlice({
   reducers: {
     setMode: (state, action) => {
       state.mode = action.payload;
+      localStorage.setItem("mode", action.payload);
     },
     setPage: (state, action) => {
       state.page = action.payload;

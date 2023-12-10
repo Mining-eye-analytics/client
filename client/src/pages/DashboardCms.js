@@ -2,67 +2,39 @@ import "../styles/dashboard_cms.scss";
 import Dashboard from "./Dashboard";
 import CmsUser from "./CmsUser";
 import CmsCctv from "./CmsCctv";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
-
-const data = [
-  {
-    name: "Senin",
-    true: 400,
-    false: 240,
-  },
-  {
-    name: "Selasa",
-    true: 300,
-    false: 139,
-  },
-  {
-    name: "Rabu",
-    true: 200,
-    false: 380,
-  },
-  {
-    name: "Kamis",
-    true: 278,
-    false: 390,
-  },
-  {
-    name: "Jumat",
-    true: 189,
-    false: 480,
-  },
-  {
-    name: "Sabtu",
-    true: 239,
-    false: 380,
-  },
-  {
-    name: "Minggu",
-    true: 349,
-    false: 430,
-  },
-];
-
-const dataCctv = [
-  { name: "CCTV A", value: 1400 },
-  { name: "CCTV B", value: 3000 },
-  { name: "CCTV C", value: 300 },
-  { name: "CCTV D", value: 1600 },
-  { name: "CCTV E", value: 1200 },
-];
+import { useSelector, useDispatch } from "react-redux";
+import { getUserList } from "../redux/userSlice";
+import { getCctvList } from "../redux/cctvSlice";
+import { setMode } from "../redux/generalSlice";
 
 const DashboardCms = () => {
+  const dispatch = useDispatch();
+  const mode = useSelector((state) => state.general.mode);
+
   const [currentTab, setCurrentTab] = useState("dashboard");
 
+  useEffect(() => {
+    dispatch(getUserList());
+    dispatch(getCctvList());
+  }, []);
+
   return (
-    <div className="dashboard-cms">
+    <div
+      className={
+        "dashboard-cms" +
+        (mode === "light" ? " dashboard-cms-light" : " dashboard-cms-dark")
+      }
+    >
       <div className="row w-100 m-0">
         <div className="navbar col-2 px-4 py-2 d-flex align-items-start flex-column">
           <div className="d-grid gap-4 mb-auto">
             <div className="d-flex justify-content-center">
               <img
                 className="w-100"
-                src={require("../assets/logo.webp")}
+                src={require("../assets/" +
+                  (mode === "light" ? "logo.webp" : "logo-dark.webp"))}
                 alt=""
               />
             </div>
@@ -112,6 +84,31 @@ const DashboardCms = () => {
             </div>
           </div>
           <div className="exit-nav d-grid gap-2">
+            <span className="mode-nav d-flex align-items-center ms-3 mb-3">
+              <button
+                className="border-0 rounded-5 row align-items-center m-0 p-0"
+                title="mode terang/gelap"
+                onClick={() => {
+                  dispatch(setMode(mode === "light" ? "dark" : "light"));
+                }}
+              >
+                {mode === "light" ? (
+                  <span className="col rounded-5 d-flex p-0"></span>
+                ) : (
+                  ""
+                )}
+                <Icon
+                  className="col d-flex p-0"
+                  icon={mode === "light" ? "ph:sun-fill" : "ph:moon-fill"}
+                />
+                {mode === "dark" ? (
+                  <span className="col d-flex p-0 rounded-5"></span>
+                ) : (
+                  ""
+                )}
+              </button>
+            </span>
+
             <span
               className="back-nav d-flex align-items-center gap-1 ms-3"
               onClick={() => {
@@ -121,7 +118,14 @@ const DashboardCms = () => {
               <Icon className="icon" icon="tabler:arrow-back-up" />
               <label>Kembali Ke MEA</label>
             </span>
-            <span className="logout-nav d-flex align-items-center gap-1 mx-3">
+            <span
+              className="logout-nav d-flex align-items-center gap-1 mx-3"
+              onClick={() => {
+                localStorage.clear();
+                window.location.href = "/login";
+                window.location.reload();
+              }}
+            >
               <Icon className="icon" icon="heroicons-outline:logout" />
               <label>Log Out</label>
             </span>
@@ -129,7 +133,7 @@ const DashboardCms = () => {
         </div>
         <div className="content col px-4 pt-2">
           {currentTab === "dashboard" ? (
-            <Dashboard data={data} dataCctv={dataCctv} />
+            <Dashboard />
           ) : currentTab === "cms-user" ? (
             <CmsUser />
           ) : (

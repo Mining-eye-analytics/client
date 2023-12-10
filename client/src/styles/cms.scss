@@ -1,4 +1,4 @@
-.dashboard {
+.cms {
     height: 100%;
 
     h1 {
@@ -36,21 +36,7 @@
         width: fit-content;
         height: max-content;
 
-        .info-header {
-            color: #737373;
-            .icon {
-                font-size: 14px;
-            }
-
-            label {
-                font-size: 12px;
-            }
-        }
-
         .info {
-            background-color: white;
-            border: 1px solid #737373;
-
             label {
                 white-space: nowrap;
             }
@@ -61,12 +47,10 @@
             }
 
             .border-start {
-                border-color: #737373 !important;
                 border-left-style: dashed !important;
             }
 
             .info-content {
-                color: #297209;
                 :nth-child(1) {
                     font-size: 26px;
                     font-weight: 500;
@@ -77,12 +61,7 @@
                 }
             }
 
-            .info-chart, .info-bar {
-                font-size: 12px;
-            }
-
             .info-other {
-                color: #737373;
                 .icon {
                     font-size: 14px;
                 }
@@ -117,15 +96,19 @@
                             font-size: 14px;
                         }
 
-                        button {
-                            background-image: linear-gradient(to right, white, white);
+                        ::placeholder {
                             color: #737373;
+                            opacity: 1; /* Firefox */
+                        }
+                          
+                        ::-ms-input-placeholder { /* Edge 12-18 */
+                            color: #737373;
+                        }
+
+                        button {
                             box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.0);
 
                             &:hover {
-                                .icon-green {
-                                    color: #297209;
-                                }
                                 .icon-red {
                                     color: #DE4452;
                                 }
@@ -142,8 +125,144 @@
     }
 }
 
+.cms-light {
+    h1 {
+        color: black;
+    }
+
+    .col-3 {
+        .info {
+            background-color: white;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+
+            .info-title {
+                color: black;
+            }
+
+            .border-start {
+                border-color: #737373 !important;
+            }
+
+            .info-content {
+                color: #297209;
+            }
+
+            .info-other {
+                color: #737373;
+            }
+        }
+    }
+
+    .cms-table-title {
+        label {
+            color: black;
+        }
+    }
+
+    .cms-table{    
+        table {
+            tbody {
+                tr {
+                    th, td, label {
+                        background-color: white;
+                        color: #737373;
+
+                        .form-control {
+                            color: black;
+                        }
+
+                        button {
+                            background-image: linear-gradient(to right, white, white);
+                            color: #737373;
+
+                            &:hover {
+                                .icon-green {
+                                    color: #297209;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.cms-dark {
+    h1 {
+        color: white;
+    }
+
+    .col-3 {
+        .info {
+            background-color: #1E1E1E;
+            border: 1px solid white;
+
+            .info-title {
+                color: white;
+            }
+
+            .border-start {
+                border-color: white !important;
+            }
+
+            .info-content {
+                color: #3B9315;
+            }
+
+            .info-other {
+                color: white;
+            }
+        }
+    }
+
+    .cms-table-title {
+        label {
+            color: white;
+        }
+    }
+
+    .cms-table{
+        table {
+            tbody {
+                tr {
+                    th, td, label {
+                        background-color: #1E1E1E;
+                        color: white;
+
+                        .form-control {
+                            background-color: #1E1E1E;
+                            color: white;
+                        }
+
+                        .disabled {
+                            background-color: #2C2C2C;
+                            color: white;
+                        }
+
+                        button {
+                            background-image: linear-gradient(to right, #1E1E1E, #1E1E1E);
+                            color: white;
+
+                            &:hover {
+                                .button-green {
+                                    color: #3B9315;
+                                }
+
+                                .icon-green {
+                                    color: #3B9315;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 @media only screen and (max-width: 1530px) {
-    .dashboard {
+    .cms {
         h1 {
             font-size: 17px;
         }
@@ -156,17 +275,7 @@
             }
         }
 
-        .col-3 {    
-            .info-header {
-                .icon {
-                    font-size: 13px;
-                }
-
-                label {
-                    font-size: 11px;
-                }
-            }
-
+        .col-3 {
             .info {
                 label {
                     font-size: 13px;
@@ -184,10 +293,6 @@
                     :nth-child(2) {
                         font-size: 13px;
                     }
-                }
-
-                .info-chart, .info-bar {
-                    font-size: 11px;
                 }
 
                 .info-other {
@@ -229,7 +334,7 @@
 }
 
 @media only screen and (max-width: 1230px) {
-    .dashboard {
+    .cms {
         h1 {
             font-size: 16px;
         }
@@ -242,17 +347,7 @@
             }
         }
 
-        .col-3 {    
-            .info-header {
-                .icon {
-                    font-size: 12px;
-                }
-
-                label {
-                    font-size: 10px;
-                }
-            }
-
+        .col-3 {
             .info {
                 label {
                     font-size: 12px;
@@ -270,10 +365,6 @@
                     :nth-child(2) {
                         font-size: 12px;
                     }
-                }
-
-                .info-chart, .info-bar {
-                    font-size: 10px;
                 }
 
                 .info-other {

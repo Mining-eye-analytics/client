@@ -37,7 +37,6 @@
         height: max-content;
 
         .info-header {
-            color: #737373;
             .icon {
                 font-size: 14px;
             }
@@ -48,9 +47,6 @@
         }
 
         .info {
-            background-color: white;
-            border: 1px solid #737373;
-
             label {
                 white-space: nowrap;
             }
@@ -61,12 +57,10 @@
             }
 
             .border-start {
-                border-color: #737373 !important;
                 border-left-style: dashed !important;
             }
 
             .info-content {
-                color: #297209;
                 :nth-child(1) {
                     font-size: 26px;
                     font-weight: 500;
@@ -82,7 +76,6 @@
             }
 
             .info-other {
-                color: #737373;
                 .icon {
                     font-size: 14px;
                 }
@@ -90,6 +83,72 @@
                 label {
                     font-size: 12px;
                 }
+            }
+        }
+    }
+}
+
+.dashboard-light {
+    h1 {
+        color: black;
+    }
+
+    .col-3, .col-6 {
+        .info-header {
+            color: #737373;
+        }
+
+        .info {
+            background-color: white;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+
+            .info-title {
+                color: black;
+            }
+
+            .border-start {
+                border-color: #737373 !important;
+            }
+
+            .info-content {
+                color: #297209;
+            }
+
+            .info-other {
+                color: #737373;
+            }
+        }
+    }
+}
+
+.dashboard-dark {
+    h1 {
+        color: white;
+    }
+
+    .col-3, .col-6 {
+        .info-header {
+            color: white;
+        }
+
+        .info {
+            background-color: #1E1E1E;
+            border: 1px solid white;
+
+            .info-title {
+                color: white;
+            }
+
+            .border-start {
+                border-color: white !important;
+            }
+
+            .info-content {
+                color: #3B9315;
+            }
+
+            .info-other {
+                color: white;
             }
         }
     }

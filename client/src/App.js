@@ -2,7 +2,6 @@ import "./App.css";
 import Main from "./pages/Main";
 import Assets from "./pages/Assets";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import DashboardCms from "./pages/DashboardCms";
 import NotFound from "./pages/NotFound";
 import { useState } from "react";
@@ -19,72 +18,69 @@ function App() {
             exact
             path="/"
             element={
-              localStorage.getItem("token") !== null ? (
-                <Main/>
+              localStorage.getItem("authorization") !== null ? (
+                <Main />
               ) : (
-                <Login/>
+                <Login />
               )
             }
           />
-          <Route path="/login" element={<Login/>} />
-          <Route path="/register" element={<Register/>} />
+          <Route path="/login" element={<Login />} />
           <Route
             path="/live-monitoring"
             element={
-              localStorage.getItem("token") !== null ? (
-                <Main/>
+              localStorage.getItem("authorization") !== null ? (
+                <Main />
               ) : (
-                <Login/>
+                <Login />
               )
             }
           />
           <Route
             path="/validasi-notifikasi"
             element={
-              localStorage.getItem("token") !== null ? (
-                <Main/>
+              localStorage.getItem("authorization") !== null ? (
+                <Main />
               ) : (
-                <Login/>
+                <Login />
               )
             }
           />
           <Route
             path="/database-deviasi"
             element={
-              localStorage.getItem("token") !== null ? (
-                <Main/>
+              localStorage.getItem("authorization") !== null ? (
+                <Main />
               ) : (
-                <Login/>
+                <Login />
               )
             }
           />
           <Route
             path="/dashboard"
             element={
-              localStorage.getItem("token") !== null ? (
+              localStorage.getItem("authorization") !== null ? (
                 <DashboardCms />
               ) : (
-                <Login/>
+                <Login />
               )
             }
           />
           <Route
             path="/assets/*"
             element={
-              localStorage.getItem("token") !== null ? (
+              localStorage.getItem("authorization") !== null ? (
                 assetsError !== true ? (
-                  <Assets
-                    setAssetsError={setAssetsError}
-                  />
+                  <Assets setAssetsError={setAssetsError} />
                 ) : (
-                  <NotFound/>
+                  <NotFound />
                 )
               ) : (
-                <Login/>
+                <Login />
               )
             }
           />
-          <Route path="/*" element={<NotFound/>} />
+          <Route path="/*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </div>
