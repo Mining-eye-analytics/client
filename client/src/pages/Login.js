@@ -1,12 +1,17 @@
+// inporting style
 import "../styles/login.scss";
+
+// importing libraries
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Icon } from "@iconify/react";
 import { useSelector } from "react-redux";
 
 const Login = () => {
+  // defining state variables with redux
   const mode = useSelector((state) => state.general.mode);
 
+  // defining state variables with react hooks
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
@@ -14,47 +19,49 @@ const Login = () => {
   const [loginLoading, setLoginLoading] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState(false);
 
-  const enterKeyHandler = () => {};
-
-  const loginHandler = () => {
-    setLoginMessage("");
-    if (username === "" || password === "") {
-      setLoginMessage("username dan password tidak boleh kosong");
-    } else {
-      setLoginLoading(true);
-      axios
-        .post(
-          window.location.protocol +
-            "//" +
-            (window.location.hostname === "localhost"
-              ? "10.10.10.66"
-              : window.location.hostname) +
-            ":" +
-            process.env.REACT_APP_API_PORT +
-            "/api/login",
-          {
-            username: username,
-            password: password,
-          }
-        )
-        .then((res) => {
-          setLoginStatus(res.data.meta.status);
-          localStorage.setItem("token", res.data.data.token);
-          localStorage.setItem("role", res.data.data.role);
-          localStorage.setItem("id", res.data.data.id);
-          localStorage.setItem("name", res.data.data.name);
-          localStorage.setItem("username", res.data.data.username);
-        })
-        .catch((err) => {
-          setLoginStatus("failed");
-          setLoginMessage("username atau password salah");
-        })
-        .finally(() => {
-          setLoginLoading(false);
-        });
+  // function to handle login when the button is clicked or enter is pressed
+  const loginHandler = (key) => {
+    if (key === "Enter") {
+      setLoginMessage("");
+      if (username === "" || password === "") {
+        setLoginMessage("username dan password tidak boleh kosong");
+      } else {
+        setLoginLoading(true);
+        axios
+          .post(
+            window.location.protocol +
+              "//" +
+              (window.location.hostname === "localhost"
+                ? "10.10.10.66"
+                : window.location.hostname) +
+              ":" +
+              process.env.REACT_APP_API_PORT +
+              "/api/login",
+            {
+              username: username,
+              password: password,
+            }
+          )
+          .then((res) => {
+            setLoginStatus(res.data.meta.status);
+            localStorage.setItem("token", res.data.data.token);
+            localStorage.setItem("role", res.data.data.role);
+            localStorage.setItem("id", res.data.data.id);
+            localStorage.setItem("name", res.data.data.name);
+            localStorage.setItem("username", res.data.data.username);
+          })
+          .catch((err) => {
+            setLoginStatus("failed");
+            setLoginMessage("username atau password salah");
+          })
+          .finally(() => {
+            setLoginLoading(false);
+          });
+      }
     }
   };
 
+  // react hooks to handle page redirection if login is successful
   useEffect(() => {
     if (loginStatus === "success") {
       if (window.location.href.includes("login")) {
@@ -65,6 +72,7 @@ const Login = () => {
     }
   }, [loginStatus]);
 
+  // rendering UI by returning HTML elements
   return (
     <div
       className={
@@ -97,7 +105,7 @@ const Login = () => {
                     placeholder="Masukkan Username atau SID"
                     onChange={(e) => setUsername(e.target.value)}
                     onKeyDown={(e) => {
-                      e.key === "Enter" ? loginHandler() : enterKeyHandler();
+                      loginHandler(e.key);
                     }}
                   />
                 </div>
@@ -110,7 +118,7 @@ const Login = () => {
                       placeholder="Masukkan Password"
                       onChange={(e) => setPassword(e.target.value)}
                       onKeyDown={(e) => {
-                        e.key === "Enter" ? loginHandler() : enterKeyHandler();
+                        loginHandler(e.key);
                       }}
                     />
                     <span

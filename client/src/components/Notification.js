@@ -94,85 +94,6 @@ const Notification = () => {
     .map((notification, index) => {
       return (
         <div key={notification.id}>
-          {notification.type_object === "HD" && notification.child?.length !== 0
-            ? notification.child
-                ?.toReversed()
-                .map((notificationHd, indexHd) => {
-                  return (
-                    <div
-                      key={notificationHd.id}
-                      className={indexHd !== 0 ? "pt-2" : ""}
-                    >
-                      <button
-                        className={
-                          "border-0 text-start rounded-2 px-3 py-2 d-grid gap-2 w-100" +
-                          (page !== "live-monitoring" &&
-                          currentNotification !== undefined &&
-                          currentNotification?.id === notificationHd.id
-                            ? " active"
-                            : "")
-                        }
-                        onClick={() => {
-                          page !== "validasi-notifikasi"
-                            ? dispatch(setPage("validasi-notifikasi"))
-                            : dispatch(setPage(page));
-                          window.history.replaceState(
-                            null,
-                            null,
-                            "/validasi-notifikasi"
-                          );
-                          dispatch(setCurrentNotification(notificationHd));
-                        }}
-                      >
-                        <div className="row m-0 align-items-center">
-                          <div className="col-5 p-0">
-                            <label>{notificationHd.type_object}</label>
-                          </div>
-                          <div className="col-7 p-0 d-flex justify-content-end">
-                            <label
-                              className={
-                                "px-2 rounded-2" +
-                                (notificationHd.type_validation === "true"
-                                  ? " status-true"
-                                  : notificationHd.type_validation === "false"
-                                  ? " status-false"
-                                  : " status-none")
-                              }
-                            >
-                              {notificationHd.type_validation === "not_yet"
-                                ? "Validasi"
-                                : notificationHd.type_validation === "true"
-                                ? "Valid"
-                                : "Tidak Valid"}
-                            </label>
-                          </div>
-                        </div>
-                        <div className="d-flex align-items-end gap-2">
-                          <Icon className="icon" icon="mdi:cctv" />
-                          <label>
-                            {notificationHd.name +
-                              " - " +
-                              notificationHd.location}
-                          </label>
-                        </div>
-                        <div className="d-flex align-items-end gap-2">
-                          <Icon className="icon" icon="akar-icons:clock" />
-                          <label>
-                            {notificationHd.created_at.substring(4, 25)}
-                          </label>
-                        </div>
-                      </button>
-                      <hr
-                        className={
-                          indexHd === notification.child.length - 1
-                            ? "pt-2"
-                            : ""
-                        }
-                      />
-                    </div>
-                  );
-                })
-            : ""}
           <button
             className={
               "border-0 text-start rounded-2 px-3 py-2 d-grid gap-2 w-100" +
@@ -228,9 +149,7 @@ const Notification = () => {
               <Icon className="icon" icon="akar-icons:clock" />
               <label>{notification.created_at.substring(4, 25)}</label>
             </div>
-            {notification.type_object === "HD" ? (
-              ""
-            ) : notification.child ? (
+            {notification.child ? (
               notification.child?.length !== 0 ? (
                 <div className="w-100">
                   <div className="row m-0 d-flex align-items-center">
@@ -286,7 +205,14 @@ const Notification = () => {
                   </div>
                   <div className="col-2 p-0">
                     <div className="d-flex justify-content-end">
-                      <Icon icon="codicon:fold-down" />
+                      <Icon
+                        icon={
+                          "codicon:fold-" +
+                          (notificationShowedChild !== notification.id
+                            ? "down"
+                            : "up")
+                        }
+                      />
                     </div>
                   </div>
                 </div>
@@ -296,8 +222,6 @@ const Notification = () => {
             )}
           </button>
           {notificationShowedChild !== notification.id
-            ? ""
-            : notification.type_object === "HD"
             ? ""
             : notification.child?.map((notificationChild) => {
                 return (
@@ -357,8 +281,6 @@ const Notification = () => {
                 );
               })}
           {notificationShowedChild !== notification.id
-            ? ""
-            : notification.type_object === "HD"
             ? ""
             : notificationChildList.map((notificationChild) => {
                 if (notificationChild.parent_id === notification.id) {

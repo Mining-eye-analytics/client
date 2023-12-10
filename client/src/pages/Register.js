@@ -1,12 +1,17 @@
+// inporting style
 import "../styles/register.scss";
+
+// importing libraries
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Icon } from "@iconify/react";
 import { useSelector } from "react-redux";
 
 const Register = () => {
+  // defining state variables with redux
   const mode = useSelector((state) => state.general.mode);
 
+  // defining state variables with react hooks
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -15,48 +20,50 @@ const Register = () => {
   const [registerLoading, setRegisterLoading] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState(false);
 
-  const enterKeyHandler = () => {};
-
-  const registerHandler = () => {
-    setRegisterMessage("");
-    if (name === "" || username === "" || password === "") {
-      setRegisterMessage("nama, username, dan password tidak boleh kosong");
-    } else {
-      setRegisterLoading(true);
-      axios
-        .post(
-          window.location.protocol +
-            "//" +
-            (window.location.hostname === "localhost"
-              ? "10.10.10.66"
-              : window.location.hostname) +
-            ":" +
-            process.env.REACT_APP_API_PORT +
-            "/api/sign-up",
-          {
-            name: name,
-            username: username,
-            password: password,
-          },
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
+  // function to handle register when the button is clicked or enter is pressed
+  const registerHandler = (key) => {
+    if (key === "Enter") {
+      setRegisterMessage("");
+      if (name === "" || username === "" || password === "") {
+        setRegisterMessage("nama, username, dan password tidak boleh kosong");
+      } else {
+        setRegisterLoading(true);
+        axios
+          .post(
+            window.location.protocol +
+              "//" +
+              (window.location.hostname === "localhost"
+                ? "10.10.10.66"
+                : window.location.hostname) +
+              ":" +
+              process.env.REACT_APP_API_PORT +
+              "/api/sign-up",
+            {
+              name: name,
+              username: username,
+              password: password,
             },
-          }
-        )
-        .then((res) => {
-          setRegisterStatus(res.data.meta.status);
-        })
-        .catch((err) => {
-          setRegisterStatus("failed");
-          setRegisterMessage("nama atau username sudah terdaftar");
-        })
-        .finally(() => {
-          setRegisterLoading(false);
-        });
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          )
+          .then((res) => {
+            setRegisterStatus(res.data.meta.status);
+          })
+          .catch((err) => {
+            setRegisterStatus("failed");
+            setRegisterMessage("nama atau username sudah terdaftar");
+          })
+          .finally(() => {
+            setRegisterLoading(false);
+          });
+      }
     }
   };
 
+  //react hooks to handle page redirection if register is successful
   useEffect(() => {
     if (registerStatus === "success") {
       if (window.location.href.includes("register")) {
@@ -65,6 +72,7 @@ const Register = () => {
     }
   }, [registerStatus]);
 
+  // rendering UI by returning HTML elements
   return (
     <div
       className={
@@ -95,7 +103,7 @@ const Register = () => {
                 placeholder="Masukkan Nama User"
                 onChange={(e) => setName(e.target.value)}
                 onKeyDown={(e) => {
-                  e.key === "Enter" ? registerHandler() : enterKeyHandler();
+                  registerHandler(e.key);
                 }}
               />
             </div>
@@ -107,7 +115,7 @@ const Register = () => {
                 placeholder="Masukkan Username atau SID"
                 onChange={(e) => setUsername(e.target.value)}
                 onKeyDown={(e) => {
-                  e.key === "Enter" ? registerHandler() : enterKeyHandler();
+                  registerHandler(e.key);
                 }}
               />
             </div>
@@ -120,7 +128,7 @@ const Register = () => {
                   placeholder="Masukkan Password"
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={(e) => {
-                    e.key === "Enter" ? registerHandler() : enterKeyHandler();
+                    registerHandler(e.key);
                   }}
                 />
                 <span

@@ -58,7 +58,7 @@ function App() {
               )
             }
           />
-          {/* <Route
+          <Route
             path="/dashboard"
             element={
               localStorage.getItem("token") !== null ? (
@@ -67,7 +67,7 @@ function App() {
                 <Login/>
               )
             }
-          /> */}
+          />
           <Route
             path="/assets/*"
             element={

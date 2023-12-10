@@ -62,30 +62,34 @@ const Validation = () => {
   };
 
   const trueCommentData = [
-    {
-      id: 1,
-      value: "Posisi HD Antri",
-    },
-    { id: 2, value: "Posisi antar HD beda elevasi (atas bawah)" },
-    { id: 3, value: "Posisi HD berlawanan arah" },
-    { id: 4, value: "Posisi HD sedang parkir" },
-    { id: 5, value: "Posisi HD tidak tegak lurus arah kamera" },
-    { id: 6, value: "Bukan HD (false warning)" },
-    { id: 7, value: "Visual Gambar tidak jelas" },
-    { id: 8, value: "LV memiliki izin memasuki area tambang" },
-    { id: 9, value: "Bukan LV (false warning)" },
-    { id: 10, value: "Pengawas memeliki izin" },
-    { id: 11, value: "Pengawas/crew blasting" },
-    { id: 12, value: "Bukan Manusia" },
-    { id: 13, value: "Warga" },
-    { id: 14, value: "Visual Camera tidak jelas" },
-  ];
-
-  const falseCommentData = [
     { id: 1, value: "Pengawas/manusia berada diluar unit" },
     { id: 2, value: "Pengawas/manusia berda diluar kabin" },
     { id: 3, value: "HD tidak menjaga jarak iring (40m)" },
     { id: 4, value: "LV tidak memeliki izin memasuki area tambang" },
+  ];
+
+  const falseCommentData = [
+    {
+      id: 1,
+      value: "Deteksi objek tepat namun bukan deviasi",
+    },
+    {
+      id: 2,
+      value: "Posisi HD Antri",
+    },
+    { id: 3, value: "Posisi antar HD beda elevasi (atas bawah)" },
+    { id: 4, value: "Posisi HD berlawanan arah" },
+    { id: 5, value: "Posisi HD sedang parkir" },
+    { id: 6, value: "Posisi HD tidak tegak lurus arah kamera" },
+    { id: 7, value: "Bukan HD (false warning)" },
+    { id: 8, value: "Visual Gambar tidak jelas" },
+    { id: 9, value: "LV memiliki izin memasuki area tambang" },
+    { id: 10, value: "Bukan LV (false warning)" },
+    { id: 11, value: "Pengawas memeliki izin" },
+    { id: 12, value: "Pengawas/crew blasting" },
+    { id: 13, value: "Bukan Manusia" },
+    { id: 14, value: "Warga" },
+    { id: 15, value: "Visual Camera tidak jelas" },
   ];
 
   const trueCommentArray = trueCommentData.map((comment) => {
@@ -113,7 +117,7 @@ const Validation = () => {
 
   const falseCommentArray = falseCommentData.map((comment) => {
     return (
-      <div key={comment.id} className="form-check">
+      <div key={comment.id} className="col-6 form-check">
         <input
           className="form-check-input"
           type="checkbox"

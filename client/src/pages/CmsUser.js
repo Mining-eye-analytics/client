@@ -1,10 +1,11 @@
-import "../styles/cms_user.scss";
+import "../styles/cms.scss";
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 
 const CmsUser = () => {
   const [action, setAction] = useState();
   const [currentUser, setCurrentUser] = useState();
+  const [formMessage, setFormMessage] = useState("");
 
   const [data, setData] = useState([
     {
@@ -13,7 +14,6 @@ const CmsUser = () => {
       username: "developer",
       role: "Admin",
       company: "PT. Berau Coal",
-      updated_at: "2023-08-31 14:53:16",
     },
     {
       id: 2,
@@ -21,7 +21,6 @@ const CmsUser = () => {
       username: "developer",
       role: "Admin",
       company: "PT. Berau Coal",
-      updated_at: "2023-08-31 14:53:16",
     },
     {
       id: 3,
@@ -29,7 +28,6 @@ const CmsUser = () => {
       username: "developer",
       role: "Admin",
       company: "PT. Berau Coal",
-      updated_at: "2023-08-31 14:53:16",
     },
     {
       id: 4,
@@ -37,7 +35,6 @@ const CmsUser = () => {
       username: "developer",
       role: "Admin",
       company: "PT. Berau Coal",
-      updated_at: "2023-08-31 14:53:16",
     },
     {
       id: 5,
@@ -45,7 +42,6 @@ const CmsUser = () => {
       username: "developer",
       role: "Admin",
       company: "PT. Berau Coal",
-      updated_at: "2023-08-31 14:53:16",
     },
     {
       id: 6,
@@ -53,7 +49,6 @@ const CmsUser = () => {
       username: "developer",
       role: "Admin",
       company: "PT. Berau Coal",
-      updated_at: "2023-08-31 14:53:16",
     },
     {
       id: 7,
@@ -61,7 +56,6 @@ const CmsUser = () => {
       username: "developer",
       role: "Admin",
       company: "PT. Berau Coal",
-      updated_at: "2023-08-31 14:53:16",
     },
     {
       id: 8,
@@ -69,7 +63,6 @@ const CmsUser = () => {
       username: "developer",
       role: "Admin",
       company: "PT. Berau Coal",
-      updated_at: "2023-08-31 14:53:16",
     },
     {
       id: 9,
@@ -77,7 +70,6 @@ const CmsUser = () => {
       username: "developer",
       role: "Admin",
       company: "PT. Berau Coal",
-      updated_at: "2023-08-31 14:53:16",
     },
     {
       id: 10,
@@ -85,43 +77,52 @@ const CmsUser = () => {
       username: "developer",
       role: "Admin",
       company: "PT. Berau Coal",
-      updated_at: "2023-08-31 14:53:16",
     },
   ]);
 
   const [addDataForm, setAddDataForm] = useState({
-    id: data[data.length - 1].id + 1,
+    id: data.length !== 0 ? data[data.length - 1]?.id + 1 : 1,
     name: "",
     username: "",
     role: "",
     company: "",
-    updated_at: new Date().toISOString().slice(0, 19).replace("T", " "),
   });
 
   const [editDataForm, setEditDataForm] = useState({});
 
   useEffect(() => {
     setAddDataForm({
-      id: data[data.length - 1].id + 1,
+      id: data.length !== 0 ? data[data.length - 1]?.id + 1 : 1,
       name: "",
       username: "",
       role: "",
       company: "",
-      updated_at: new Date().toISOString().slice(0, 19).replace("T", " "),
     });
+
+    setEditDataForm({});
   }, [data]);
 
-  const addUser = (data) => {
-    setData((array) => [...array, data]);
+  const addUser = (addForm) => {
+    if (addForm.name !== "" && addForm.username !== "" && addForm.role !== "") {
+      setData((array) => [...array, addForm]);
+      setFormMessage("");
+    } else {
+      setFormMessage("*form tidak boleh kosong");
+    }
   };
 
-  const editUser = (userId) => {};
+  const editUser = (editForm, index) => {
+    const temporaryData = data;
+    temporaryData[index] = editForm;
+    setData(temporaryData);
+    setFormMessage("");
+  };
 
   const deleteUser = (userId) => {
     setData(data.filter((user) => user.id !== userId));
   };
 
-  const userArr = data.map((user) => {
+  const userArr = data.map((user, index) => {
     return (
       <tr className="align-middle">
         <th className="text-center" scope="row">
@@ -132,6 +133,7 @@ const CmsUser = () => {
             className="form-control w-100"
             type="text"
             value={editDataForm.id !== user.id ? user.name : editDataForm.name}
+            placeholder="Masukkan nama"
             disabled={currentUser === user.id ? false : true}
             onChange={(e) => {
               setEditDataForm({ ...editDataForm, name: e.target.value });
@@ -142,10 +144,15 @@ const CmsUser = () => {
           <input
             className="form-control w-100"
             type="text"
-            value={user.username}
+            value={
+              editDataForm.id !== user.id
+                ? user.username
+                : editDataForm.username
+            }
+            placeholder="Masukkan username"
             disabled={currentUser === user.id ? false : true}
             onChange={(e) => {
-              setAddDataForm({ ...addDataForm, name: e.target.value });
+              setEditDataForm({ ...editDataForm, username: e.target.value });
             }}
           />
         </td>
@@ -153,10 +160,11 @@ const CmsUser = () => {
           <input
             className="form-control w-100"
             type="text"
-            value={user.role}
+            value={editDataForm.id !== user.id ? user.role : editDataForm.role}
+            placeholder="Masukkan role"
             disabled={currentUser === user.id ? false : true}
             onChange={(e) => {
-              setAddDataForm({ ...addDataForm, name: e.target.value });
+              setEditDataForm({ ...editDataForm, role: e.target.value });
             }}
           />
         </td>
@@ -164,10 +172,13 @@ const CmsUser = () => {
           <input
             className="form-control w-100"
             type="text"
-            value={user.company}
+            value={
+              editDataForm.id !== user.id ? user.company : editDataForm.company
+            }
+            placeholder="Masukkan instansi"
             disabled={currentUser === user.id ? false : true}
             onChange={(e) => {
-              setAddDataForm({ ...addDataForm, name: e.target.value });
+              setEditDataForm({ ...editDataForm, company: e.target.value });
             }}
           />
         </td>
@@ -176,20 +187,27 @@ const CmsUser = () => {
             <button
               className="border-0 me-2"
               onClick={() => {
-                setCurrentUser();
-                action === "edit" ? editUser(user.id) : deleteUser(user.id);
-              }}
-            >
-              <Icon className="icon" icon="mingcute:check-fill" />
-            </button>
-            <button
-              className="border-0"
-              onClick={() => {
+                action === "edit"
+                  ? editUser(editDataForm, index)
+                  : deleteUser(user.id);
                 setCurrentUser();
                 setAction();
               }}
             >
-              <Icon className="icon" icon="ep:close-bold" />
+              <Icon className="icon icon-green" icon="mingcute:check-fill" />
+            </button>
+            <button
+              className="border-0"
+              onClick={() => {
+                formMessage === ""
+                  ? setFormMessage(formMessage)
+                  : setFormMessage("");
+                setCurrentUser();
+                setAction();
+                setEditDataForm({});
+              }}
+            >
+              <Icon className="icon icon-red" icon="ep:close-bold" />
             </button>
           </td>
         ) : (
@@ -202,7 +220,7 @@ const CmsUser = () => {
                 setEditDataForm(user);
               }}
             >
-              <Icon className="icon" icon="material-symbols:edit" />
+              <Icon className="icon icon-green" icon="material-symbols:edit" />
             </button>
             <button
               className="border-0"
@@ -211,7 +229,7 @@ const CmsUser = () => {
                 setAction("delete");
               }}
             >
-              <Icon className="icon" icon="mingcute:delete-fill" />
+              <Icon className="icon icon-red" icon="mingcute:delete-fill" />
             </button>
           </td>
         )}
@@ -264,10 +282,15 @@ const CmsUser = () => {
           </div>
         </div>
         <div>
-          <div className="mb-2">
-            <label>Daftar Pengguna</label>
+          <div className="row m-0 mb-2">
+            <div className="col p-0">
+              <label>Daftar Pengguna</label>
+            </div>
+            <div className="col p-0 d-flex justify-content-end">
+              <label>{formMessage}</label>
+            </div>
           </div>
-          <div className="user-table overflow-auto">
+          <div className="cms-table overflow-auto">
             <table className="table">
               <thead>
                 <tr className="text-center">
@@ -304,7 +327,10 @@ const CmsUser = () => {
                       placeholder="Masukkan nama"
                       disabled={!currentUser ? false : true}
                       onChange={(e) => {
-                        setAddDataForm({ ...addDataForm, name: e.target.value });
+                        setAddDataForm({
+                          ...addDataForm,
+                          name: e.target.value,
+                        });
                       }}
                     />
                   </td>
@@ -316,7 +342,10 @@ const CmsUser = () => {
                       placeholder="Masukkan username"
                       disabled={!currentUser ? false : true}
                       onChange={(e) => {
-                        setAddDataForm({ ...addDataForm, username: e.target.value });
+                        setAddDataForm({
+                          ...addDataForm,
+                          username: e.target.value,
+                        });
                       }}
                     />
                   </td>
@@ -328,7 +357,10 @@ const CmsUser = () => {
                       placeholder="Masukkan role"
                       disabled={!currentUser ? false : true}
                       onChange={(e) => {
-                        setAddDataForm({ ...addDataForm, role: e.target.value });
+                        setAddDataForm({
+                          ...addDataForm,
+                          role: e.target.value,
+                        });
                       }}
                     />
                   </td>
@@ -340,7 +372,10 @@ const CmsUser = () => {
                       placeholder="Masukkan instansi"
                       disabled={!currentUser ? false : true}
                       onChange={(e) => {
-                        setAddDataForm({ ...addDataForm, company: e.target.value });
+                        setAddDataForm({
+                          ...addDataForm,
+                          company: e.target.value,
+                        });
                       }}
                     />
                   </td>

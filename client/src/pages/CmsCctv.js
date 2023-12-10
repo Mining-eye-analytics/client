@@ -1,10 +1,11 @@
-import "../styles/cms_user.scss";
+import "../styles/cms.scss";
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 
 const CmsCctv = () => {
   const [action, setAction] = useState();
-  const [currentUser, setCurrentUser] = useState();
+  const [currentCctv, setCurrentCctv] = useState();
+  const [formMessage, setFormMessage] = useState("");
 
   const [data, setData] = useState([
     {
@@ -36,19 +37,21 @@ const CmsCctv = () => {
     },
   ]);
 
-  const [formData, setFormData] = useState({
-    id: data[data.length - 1].id + 1,
+  const [addDataForm, setAddDataForm] = useState({
+    id: data.length !== 0 ? data[data.length - 1]?.id + 1 : 1,
     name: "",
-      location: "",
-      ip: "",
-      link: "",
-      username: "",
-      password: "",
+    location: "",
+    ip: "",
+    link: "",
+    username: "",
+    password: "",
   });
 
+  const [editDataForm, setEditDataForm] = useState({});
+
   useEffect(() => {
-    setFormData({
-      id: data[data.length - 1].id + 1,
+    setAddDataForm({
+      id: data.length !== 0 ? data[data.length - 1]?.id + 1 : 1,
       name: "",
       location: "",
       ip: "",
@@ -56,19 +59,36 @@ const CmsCctv = () => {
       username: "",
       password: "",
     });
+
+    setEditDataForm({});
   }, [data]);
 
-  const addUser = (data) => {
-    setData((array) => [...array, data]);
+  const addCctv = (addForm) => {
+    if (
+      addForm.name !== "" &&
+      addForm.location !== "" &&
+      addForm.ip !== "" &&
+      addForm.link !== ""
+    ) {
+      setData((array) => [...array, addForm]);
+      setFormMessage("");
+    } else {
+      setFormMessage("*form tidak boleh kosong");
+    }
   };
 
-  const editUser = (userId) => {};
-
-  const deleteUser = (userId) => {
-    setData(data.filter((user) => user.id !== userId));
+  const editCctv = (editForm, index) => {
+    const temporaryData = data;
+    temporaryData[index] = editForm;
+    setData(temporaryData);
+    setFormMessage("");
   };
 
-  const userArr = data.map((cctv) => {
+  const deleteCctv = (cctvId) => {
+    setData(data.filter((cctv) => cctv.id !== cctvId));
+  };
+
+  const cctvArr = data.map((cctv, index) => {
     return (
       <tr className="align-middle">
         <th className="text-center" scope="row">
@@ -78,69 +98,112 @@ const CmsCctv = () => {
           <input
             className="form-control w-100"
             type="text"
-            value={cctv.name}
-            disabled={currentUser === cctv.id ? false : true}
+            value={editDataForm.id !== cctv.id ? cctv.name : editDataForm.name}
+            placeholder="Masukkan nama CCTV"
+            disabled={currentCctv === cctv.id ? false : true}
+            onChange={(e) => {
+              setEditDataForm({ ...editDataForm, name: e.target.value });
+            }}
           />
         </td>
         <td className="text-center">
           <input
             className="form-control w-100"
             type="text"
-            value={cctv.location}
-            disabled={currentUser === cctv.id ? false : true}
+            value={
+              editDataForm.id !== cctv.id
+                ? cctv.location
+                : editDataForm.location
+            }
+            placeholder="Masukkan lokasi CCTV"
+            disabled={currentCctv === cctv.id ? false : true}
+            onChange={(e) => {
+              setEditDataForm({ ...editDataForm, location: e.target.value });
+            }}
           />
         </td>
         <td className="text-center">
           <input
             className="form-control w-100"
             type="text"
-            value={cctv.ip}
-            disabled={currentUser === cctv.id ? false : true}
+            value={editDataForm.id !== cctv.id ? cctv.ip : editDataForm.ip}
+            placeholder="Masukkan IP RTSP"
+            disabled={currentCctv === cctv.id ? false : true}
+            onChange={(e) => {
+              setEditDataForm({ ...editDataForm, ip: e.target.value });
+            }}
           />
         </td>
         <td className="text-center">
           <input
             className="form-control w-100"
             type="text"
-            value={cctv.link}
-            disabled={currentUser === cctv.id ? false : true}
+            value={editDataForm.id !== cctv.id ? cctv.link : editDataForm.link}
+            placeholder="Masukkan link RTSP"
+            disabled={currentCctv === cctv.id ? false : true}
+            onChange={(e) => {
+              setEditDataForm({ ...editDataForm, link: e.target.value });
+            }}
           />
         </td>
         <td className="text-center">
           <input
             className="form-control w-100"
             type="text"
-            value={cctv.username}
-            disabled={currentUser === cctv.id ? false : true}
+            value={
+              editDataForm.id !== cctv.id
+                ? cctv.username
+                : editDataForm.username
+            }
+            placeholder="Masukkan username RTSP"
+            disabled={currentCctv === cctv.id ? false : true}
+            onChange={(e) => {
+              setEditDataForm({ ...editDataForm, username: e.target.value });
+            }}
           />
         </td>
         <td className="text-center">
           <input
             className="form-control w-100"
             type="text"
-            value={cctv.password}
-            disabled={currentUser === cctv.id ? false : true}
+            value={
+              editDataForm.id !== cctv.id
+                ? cctv.password
+                : editDataForm.password
+            }
+            placeholder="Masukkan password RTSP"
+            disabled={currentCctv === cctv.id ? false : true}
+            onChange={(e) => {
+              setEditDataForm({ ...editDataForm, password: e.target.value });
+            }}
           />
         </td>
-        {currentUser === cctv.id ? (
+        {currentCctv === cctv.id ? (
           <td className="text-center">
             <button
               className="border-0 me-2"
               onClick={() => {
-                setCurrentUser();
-                action === "edit" ? editUser(cctv.id) : deleteUser(cctv.id);
+                action === "edit"
+                  ? editCctv(editDataForm, index)
+                  : deleteCctv(cctv.id);
+                setCurrentCctv();
+                setAction();
               }}
             >
-              <Icon className="icon" icon="mingcute:check-fill" />
+              <Icon className="icon icon-green" icon="mingcute:check-fill" />
             </button>
             <button
               className="border-0"
               onClick={() => {
-                setCurrentUser();
+                formMessage === ""
+                  ? setFormMessage(formMessage)
+                  : setFormMessage("");
+                setCurrentCctv();
                 setAction();
+                setEditDataForm({});
               }}
             >
-              <Icon className="icon" icon="ep:close-bold" />
+              <Icon className="icon icon-red" icon="ep:close-bold" />
             </button>
           </td>
         ) : (
@@ -148,20 +211,21 @@ const CmsCctv = () => {
             <button
               className="border-0 me-2"
               onClick={() => {
-                setCurrentUser(cctv.id);
+                setCurrentCctv(cctv.id);
                 setAction("edit");
+                setEditDataForm(cctv);
               }}
             >
-              <Icon className="icon" icon="material-symbols:edit" />
+              <Icon className="icon icon-green" icon="material-symbols:edit" />
             </button>
             <button
               className="border-0"
               onClick={() => {
-                setCurrentUser(cctv.id);
+                setCurrentCctv(cctv.id);
                 setAction("delete");
               }}
             >
-              <Icon className="icon" icon="mingcute:delete-fill" />
+              <Icon className="icon icon-red" icon="mingcute:delete-fill" />
             </button>
           </td>
         )}
@@ -203,6 +267,7 @@ const CmsCctv = () => {
                   <label>CCTV</label>
                 </div>
               </div>
+
               <div className="info-other d-flex justify-content-end align-items-center gap-1">
                 <Icon className="icon" icon="carbon:location-filled" />
                 <label>BMO 2</label>
@@ -225,10 +290,15 @@ const CmsCctv = () => {
           </div>
         </div>
         <div>
-          <div className="mb-2">
-            <label>Daftar Pengguna</label>
+          <div className="row m-0 mb-2">
+            <div className="col p-0">
+              <label>Daftar Pengguna</label>
+            </div>
+            <div className="col p-0 d-flex justify-content-end">
+              <label>{formMessage}</label>
+            </div>
           </div>
-          <div className="user-table overflow-auto">
+          <div className="cms-table overflow-auto">
             <table className="table">
               <thead>
                 <tr className="text-center">
@@ -267,11 +337,14 @@ const CmsCctv = () => {
                     <input
                       className="form-control w-100"
                       type="text"
-                      value={formData.name}
+                      value={addDataForm.name}
                       placeholder="Masukkan nama CCTV"
-                      disabled={!currentUser ? false : true}
+                      disabled={!currentCctv ? false : true}
                       onChange={(e) => {
-                        setFormData({ ...formData, name: e.target.value });
+                        setAddDataForm({
+                          ...addDataForm,
+                          name: e.target.value,
+                        });
                       }}
                     />
                   </td>
@@ -279,11 +352,14 @@ const CmsCctv = () => {
                     <input
                       className="form-control w-100"
                       type="text"
-                      value={formData.location}
+                      value={addDataForm.location}
                       placeholder="Masukkan lokasi CCTV"
-                      disabled={!currentUser ? false : true}
+                      disabled={!currentCctv ? false : true}
                       onChange={(e) => {
-                        setFormData({ ...formData, location: e.target.value });
+                        setAddDataForm({
+                          ...addDataForm,
+                          location: e.target.value,
+                        });
                       }}
                     />
                   </td>
@@ -291,11 +367,14 @@ const CmsCctv = () => {
                     <input
                       className="form-control w-100"
                       type="text"
-                      value={formData.ip}
-                      placeholder="Masukkan IP"
-                      disabled={!currentUser ? false : true}
+                      value={addDataForm.ip}
+                      placeholder="Masukkan IP RTSP"
+                      disabled={!currentCctv ? false : true}
                       onChange={(e) => {
-                        setFormData({ ...formData, ip: e.target.value });
+                        setAddDataForm({
+                          ...addDataForm,
+                          ip: e.target.value,
+                        });
                       }}
                     />
                   </td>
@@ -303,11 +382,14 @@ const CmsCctv = () => {
                     <input
                       className="form-control w-100"
                       type="text"
-                      value={formData.link}
+                      value={addDataForm.link}
                       placeholder="Masukkan link RTSP"
-                      disabled={!currentUser ? false : true}
+                      disabled={!currentCctv ? false : true}
                       onChange={(e) => {
-                        setFormData({ ...formData, link: e.target.value });
+                        setAddDataForm({
+                          ...addDataForm,
+                          link: e.target.value,
+                        });
                       }}
                     />
                   </td>
@@ -315,11 +397,14 @@ const CmsCctv = () => {
                     <input
                       className="form-control w-100"
                       type="text"
-                      value={formData.username}
-                      placeholder="Masukkan username"
-                      disabled={!currentUser ? false : true}
+                      value={addDataForm.username}
+                      placeholder="Masukkan username RTSP"
+                      disabled={!currentCctv ? false : true}
                       onChange={(e) => {
-                        setFormData({ ...formData, username: e.target.value });
+                        setAddDataForm({
+                          ...addDataForm,
+                          username: e.target.value,
+                        });
                       }}
                     />
                   </td>
@@ -327,11 +412,14 @@ const CmsCctv = () => {
                     <input
                       className="form-control w-100"
                       type="text"
-                      value={formData.password}
-                      placeholder="Masukkan password"
-                      disabled={!currentUser ? false : true}
+                      value={addDataForm.password}
+                      placeholder="Masukkan password RTSP"
+                      disabled={!currentCctv ? false : true}
                       onChange={(e) => {
-                        setFormData({ ...formData, password: e.target.value });
+                        setAddDataForm({
+                          ...addDataForm,
+                          password: e.target.value,
+                        });
                       }}
                     />
                   </td>
@@ -339,14 +427,14 @@ const CmsCctv = () => {
                     <button
                       className="border-0"
                       onClick={() => {
-                        addUser(formData);
+                        addCctv(addDataForm);
                       }}
                     >
                       Tambah Data
                     </button>
                   </td>
                 </tr>
-                {userArr}
+                {cctvArr}
               </tbody>
             </table>
           </div>

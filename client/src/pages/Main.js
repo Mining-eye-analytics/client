@@ -1,13 +1,22 @@
+// importing style
 import "../styles/main.scss";
+
+// importing components
 import Cctv from "../components/Cctv";
+import Notification from "../components/Notification";
+
+//importing pages
 import LiveMonitoring from "./LiveMonitoring";
 import ValidasiNotifikasi from "./ValidasiNotifikasi";
-import Notification from "../components/Notification";
 import DatabaseDeviasi from "./DatabaseDeviasi";
+
+// importing libraries
 import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import socketIOClient from "socket.io-client";
 import { useSelector, useDispatch } from "react-redux";
+
+// importing redux actions
 import { setMode, setPage } from "../redux/generalSlice";
 import { getCctvList, addDeviationIndicatedCctv } from "../redux/cctvSlice";
 import {
@@ -16,7 +25,6 @@ import {
   setNotificationLimit,
   reloadNotification,
   addNotificationChild,
-  addNotificationChildUnique,
 } from "../redux/notificationSlice";
 import {
   getDeviationList,
@@ -27,10 +35,11 @@ import {
 } from "../redux/deviationSlice";
 
 const Main = () => {
+  // defining state variabels with redux
   const dispatch = useDispatch();
   const mode = useSelector((state) => state.general.mode);
   const page = useSelector((state) => state.general.page);
-
+  
   const notificationCurrentCctv = useSelector(
     (state) => state.notification.currentCctv
   );
@@ -63,12 +72,15 @@ const Main = () => {
     (state) => state.deviation.currentTime
   );
 
+  // defining state variabels with react hooks
   const [date, setDate] = useState([new Date(), new Date()]);
 
+  // react hooks to trigger getCctvList function running once in initial rendering
   useEffect(() => {
     dispatch(getCctvList());
   }, []);
 
+  // react hooks to trigger getNotificationList function running once in initial rendering and every time the value of notificationCurrentCctv, currentObject, currentValidationStatus, submit, reload, and notificationLimit changes
   useEffect(() => {
     dispatch(getNotificationList());
   }, [
@@ -79,7 +91,7 @@ const Main = () => {
     reload === true ? notificationLimit : notificationCurrentCctv,
   ]);
 
-  // socket.io
+  // socket.io variable to connect client to server
   const socket = socketIOClient(
     window.location.protocol +
       "//" +
@@ -96,6 +108,7 @@ const Main = () => {
     }
   );
 
+  // react hooks to connect client to server with socket.io and change notification state variabels every time the value of notificationCurrentCctv, currentObject, currentValidationStatus, reload, and notificationLimit changes
   useEffect(() => {
     socket.on("message_from_server", (data) => newNotifHandler(data));
     if (socket.connected === false) {
@@ -115,6 +128,7 @@ const Main = () => {
     deviationIndicatedCctv,
   ]);
 
+  // function to handle new notification traffic from socket.io
   const newNotifHandler = (newNotif) => {
     newNotif.map((notification) => {
       if (
@@ -172,37 +186,19 @@ const Main = () => {
           if (notificationCurrentCctv !== 0) {
             if (notificationCurrentCctv.toString() === notification.cctv_id) {
               if (currentObject === "All") {
-                if (notification.type_object !== "HD") {
-                  dispatch(addNotificationChild(notification));
-                } else {
-                  dispatch(addSocketNotification(notification));
-                  dispatch(reloadNotification(false));
-                  dispatch(setNotificationLimit(notificationLimit + 1));
-                  if (alarmSound === true) {
-                    audio.play();
-                  }
-                }
+                dispatch(addNotificationChild(notification));
               } else {
                 if (currentObject === notification.type_object) {
-                  dispatch(addNotificationChildUnique(notification));
+                  dispatch(addNotificationChild(notification));
                 }
               }
             }
           } else {
             if (currentObject === "All") {
-              if (notification.type_object !== "HD") {
-                dispatch(addNotificationChild(notification));
-              } else {
-                dispatch(addSocketNotification(notification));
-                dispatch(reloadNotification(false));
-                dispatch(setNotificationLimit(notificationLimit + 1));
-                if (alarmSound === true) {
-                  audio.play();
-                }
-              }
+              dispatch(addNotificationChild(notification));
             } else {
               if (currentObject === notification.type_object) {
-                dispatch(addNotificationChildUnique(notification));
+                dispatch(addNotificationChild(notification));
               }
             }
           }
@@ -211,6 +207,7 @@ const Main = () => {
     });
   };
 
+  // react hooks to trigger getDeviationList function running once in initial rendering and every time the value of deviationCurrentCctv, deviationCurrentObject, deviationCurrentValidationStatus, deviationCurrentDate, and deviationCurrentTime changes
   useEffect(() => {
     dispatch(getDeviationList());
   }, [
@@ -221,10 +218,12 @@ const Main = () => {
     deviationCurrentTime,
   ]);
 
+  // react hooks to set deviationCurrentDate value to the selected date every time the value of date changes
   useEffect(() => {
     dispatch(setDeviationCurrentDate(date));
   }, [date]);
 
+  // react hooks to set tablePageDataLimit value back to 25, set currentTablePage value back to 1, and set currentDeviation value back to undefined (empty) every time the value of deviationCurrentCctv, deviationCurrentObject, deviationCurrentValidationStatus, deviationCurrentDate, and deviationCurrentTime changes
   useEffect(() => {
     dispatch(setTablePageDataLimit(25));
     dispatch(setCurrentTablePage(1));
@@ -237,6 +236,7 @@ const Main = () => {
     deviationCurrentTime,
   ]);
 
+  // rendering UI by returning html elements
   return (
     <div className={"main" + (mode === "light" ? " main-light" : " main-dark")}>
       <nav className="navbar navbar-expand-lg">
@@ -363,7 +363,13 @@ const Main = () => {
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
-                  <li className="d-none">
+                  {/* <li
+                    className={
+                      localStorage.getItem("role") === "super_admin"
+                        ? ""
+                        : "d-none"
+                    }
+                  >
                     <button
                       className="dashboard dropdown-item d-flex align-items-center gap-2"
                       onClick={() => {
@@ -373,7 +379,7 @@ const Main = () => {
                       <Icon className="fs-5" icon="mingcute:grid-2-fill" />
                       <label>Dashboard</label>
                     </button>
-                  </li>
+                  </li> */}
                   <li>
                     <button
                       className="log-out dropdown-item d-flex align-items-center gap-2"

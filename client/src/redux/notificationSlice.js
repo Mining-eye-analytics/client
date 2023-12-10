@@ -92,9 +92,6 @@ const notificationSlice = createSlice({
     addNotificationChild: (state, action) => {
       state.childList = [...state.childList, action.payload];
     },
-    addNotificationChildUnique: (state, action) => {
-      state.childList = [action.payload, ...state.childList];
-    },
     showNotificationChild: (state, action) => {
       state.showedChild = action.payload;
     },
@@ -128,7 +125,6 @@ export const {
   activateAlarmSound,
   showAlarmPopup,
   addNotificationChild,
-  addNotificationChildUnique,
   showNotificationChild,
 } = notificationSlice.actions;
 
