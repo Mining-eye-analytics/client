@@ -109,14 +109,12 @@ const deviationSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getDeviationList.pending, (state) => {
-      state.current = undefined;
-      state.loading = true;
       state.list = [];
+      state.loading = true;
     });
     builder.addCase(getDeviationList.fulfilled, (state, action) => {
       state.loading = false;
       state.list = action.payload === null ? [] : action.payload;
-      console.log(action.payload);
     });
     builder.addCase(getDeviationList.rejected, (state, action) => {
       state.loading = false;

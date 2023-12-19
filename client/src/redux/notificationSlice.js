@@ -82,7 +82,6 @@ const notificationSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getNotificationList.pending, (state) => {
-      state.current = undefined;
       state.loading = true;
       state.list = [];
     });

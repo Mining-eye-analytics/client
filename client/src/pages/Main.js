@@ -221,6 +221,7 @@ const Main = () => {
     deviationCurrentValidationStatus,
     deviationCurrentDate,
     deviationCurrentTime,
+    submit,
   ]);
 
   // react hooks to set deviationCurrentDate value to the selected date every time the value of date changes

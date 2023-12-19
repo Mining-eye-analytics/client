@@ -19,13 +19,18 @@ const DataExport = ({ currentAnalyticsTab }) => {
   );
   const [exportData, setExportData] = useState([]);
   const [notificationCctvData, setNotificationCctvData] = useState({});
+  const [notificationCctvDataLoading, setNotificationCctvDataLoading] =
+    useState(false);
   const [notificationObjectData, setNotificationObjectData] = useState({});
+  const [notificationObjectDataLoading, setNotificationObjectDataLoading] =
+    useState(false);
 
   useEffect(() => {
+    setNotificationCctvDataLoading(true);
     customAxios({
       method: "GET",
       url:
-        "/api/count_cctv?startDate=" +
+        "/deviations/count_cctv?startDate=" +
         dayjs(
           new Date(deviationCurrentDate[0]).setHours(
             deviationCurrentTime[0]?.slice(0, 2),
@@ -57,14 +62,18 @@ const DataExport = ({ currentAnalyticsTab }) => {
         }
         setNotificationCctvData(tempData);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setNotificationCctvDataLoading(false);
+      });
   }, [deviationCurrentDate, deviationCurrentTime]);
 
   useEffect(() => {
+    setNotificationObjectDataLoading(true);
     customAxios({
       method: "GET",
       url:
-        "/api/count_object?startDate=" +
+        "/deviations/count_object?startDate=" +
         dayjs(
           new Date(deviationCurrentDate[0]).setHours(
             deviationCurrentTime[0]?.slice(0, 2),
@@ -96,7 +105,10 @@ const DataExport = ({ currentAnalyticsTab }) => {
         }
         setNotificationObjectData(tempData);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setNotificationObjectDataLoading(false);
+      });
   }, [deviationCurrentDate, deviationCurrentTime]);
 
   useEffect(() => {
@@ -175,11 +187,7 @@ const DataExport = ({ currentAnalyticsTab }) => {
     setExportData(tempData);
   }, [deviationList]);
 
-  const downloadWeeklyData = (
-    exportData,
-    notificationCctvData,
-    notificationObjectData
-  ) => {
+  const downloadWeeklyData = (exportData) => {
     const fileName =
       new Date().getDate() +
       "-" +
@@ -248,26 +256,27 @@ const DataExport = ({ currentAnalyticsTab }) => {
         (exportData.length === 0 ? " d-none" : "")
       }
     >
-      {/* <button
-        className={
-          "export-weekly border-0 rounded-2 px-3 py-1" +
-          (currentAnalyticsTab === "AnalyticsCountingCrossing" ||
-          JSON.parse(localStorage.getItem("authorization"))?.user_role !==
-            "super_admin"
-            ? " d-none"
-            : "")
-        }
-        onClick={() => {
-          downloadWeeklyData(
-            exportData,
-            notificationCctvData,
-            notificationObjectData
-          );
-        }}
-      >
-        <Icon className="icon me-1" icon="entypo:export" />
-        <label>Export Weekly</label>
-      </button> */}
+      {currentAnalyticsTab !== "AnalyticsCountingCrossing" ? (
+        !notificationCctvDataLoading && !notificationObjectDataLoading ? (
+          <button
+            className="export-weekly border-0 rounded-2 px-3 py-1"
+            onClick={() => {
+              downloadWeeklyData(exportData);
+            }}
+          >
+            <Icon className="icon me-1" icon="entypo:export" />
+            <label>Export Weekly</label>
+          </button>
+        ) : (
+          <div className="d-flex justify-content-center my-3">
+            <div className="spinner-border">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        )
+      ) : (
+        ""
+      )}
       <button
         className="export border-0 rounded-2 px-3 py-1"
         onClick={() => {
