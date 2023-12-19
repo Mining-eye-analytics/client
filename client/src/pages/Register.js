@@ -153,7 +153,7 @@ const Register = () => {
             <div className="d-grid">
               <button
                 className="border-0 rounded-2 px-3 py-2"
-                onClick={registerHandler}
+                onClick={() => registerHandler("Enter")}
               >
                 Daftar
               </button>

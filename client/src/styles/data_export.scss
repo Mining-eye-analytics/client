@@ -9,6 +9,7 @@
             cursor: pointer;
         }
     }
+
     .export-weekly {
         border: 2px solid #297209 !important;
         background-color: transparent;
@@ -24,6 +25,7 @@
             }
         }
     }
+    
     .export {
         background-image: linear-gradient(to right, #3B9315, #297209);
         color: white;
@@ -35,6 +37,10 @@
         label {
             color: white !important;
         }
+    }
+
+    .spinner-border {
+        color: #3B9315;
     }
 }
 

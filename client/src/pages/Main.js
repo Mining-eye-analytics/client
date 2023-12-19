@@ -39,7 +39,7 @@ const Main = () => {
   const dispatch = useDispatch();
   const mode = useSelector((state) => state.general.mode);
   const page = useSelector((state) => state.general.page);
-  
+
   const notificationCurrentCctv = useSelector(
     (state) => state.notification.currentCctv
   );
@@ -216,6 +216,7 @@ const Main = () => {
     deviationCurrentValidationStatus,
     deviationCurrentDate,
     deviationCurrentTime,
+    submit,
   ]);
 
   // react hooks to set deviationCurrentDate value to the selected date every time the value of date changes

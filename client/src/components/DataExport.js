@@ -19,12 +19,13 @@ const DataExport = () => {
   const [exportData, setExportData] = useState([]);
   const [notificationCctvData, setNotificationCctvData] = useState({});
   const [notificationCctvDataLoading, setNotificationCctvDataLoading] =
-    useState(true);
+    useState(false);
   const [notificationObjectData, setNotificationObjectData] = useState({});
   const [notificationObjectDataLoading, setNotificationObjectDataLoading] =
-    useState(true);
+    useState(false);
 
   useEffect(() => {
+    setNotificationCctvDataLoading(true);
     axios({
       method: "GET",
       url:
@@ -77,6 +78,7 @@ const DataExport = () => {
   }, [deviationCurrentDate, deviationCurrentTime]);
 
   useEffect(() => {
+    setNotificationObjectDataLoading(true);
     axios({
       method: "GET",
       url:
@@ -228,25 +230,26 @@ const DataExport = () => {
       className={
         "button-group d-flex align-items-center gap-3" +
         (mode === "light" ? " button-group-light" : " button-group-dark") +
-        (exportData.length === 0 ||
-        notificationCctvDataLoading ||
-        notificationObjectDataLoading
-          ? " d-none"
-          : "")
+        (exportData.length === 0 ? " d-none" : "")
       }
     >
-      <button
-        className={
-          "export-weekly border-0 rounded-2 px-3 py-1" +
-          (localStorage.getItem("role") !== "admin" ? " d-none" : "")
-        }
-        onClick={() => {
-          downloadWeeklyData(exportData);
-        }}
-      >
-        <Icon className="icon me-1" icon="entypo:export" />
-        <label>Export Weekly</label>
-      </button>
+      {!notificationCctvDataLoading && !notificationObjectDataLoading ? (
+        <button
+          className="export-weekly border-0 rounded-2 px-3 py-1"
+          onClick={() => {
+            downloadWeeklyData(exportData);
+          }}
+        >
+          <Icon className="icon me-1" icon="entypo:export" />
+          <label>Export Weekly</label>
+        </button>
+      ) : (
+        <div className="d-flex justify-content-center my-3">
+          <div className="spinner-border">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      )}
       <button
         className="export border-0 rounded-2 px-3 py-1"
         onClick={() => {

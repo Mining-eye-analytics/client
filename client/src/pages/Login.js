@@ -143,7 +143,7 @@ const Login = () => {
                 <div className="d-grid">
                   <button
                     className="border-0 rounded-2 px-3 py-2"
-                    onClick={loginHandler}
+                    onClick={() => loginHandler("Enter")}
                   >
                     Masuk
                   </button>

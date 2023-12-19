@@ -110,6 +110,7 @@ const deviationSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getDeviationList.pending, (state) => {
+      state.list = [];
       state.loading = true;
     });
     builder.addCase(getDeviationList.fulfilled, (state, action) => {
