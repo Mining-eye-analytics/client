@@ -1,0 +1,279 @@
+.dashboard {
+    height: 100%;
+
+    .dashboard-title {
+        font-size: 20px;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
+    }
+
+    .export-button {
+        font-size: 14px;
+        font-weight: 500;
+        background-image: linear-gradient(to right, #3B9315, #297209);
+        color: white;
+        box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2);
+
+        &:hover {
+            background-image: linear-gradient(to right, #297209, #297209);
+        }
+
+        &:focus {
+            background-image: linear-gradient(to right, #297209, #297209);
+        }
+
+        .icon {
+            font-size: 20px;
+        }
+
+        label {
+            cursor: pointer;
+        }
+    }
+
+    .col-3, .col-6 {
+        width: fit-content;
+        height: max-content;
+
+        .info-header {
+            .icon {
+                font-size: 14px;
+            }
+
+            label {
+                font-size: 12px;
+            }
+        }
+
+        .info {
+            label {
+                white-space: nowrap;
+            }
+
+            .info-title {
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            .border-start {
+                border-left-style: dashed !important;
+            }
+
+            .info-content {
+                :nth-child(1) {
+                    font-size: 26px;
+                    font-weight: 500;
+                }
+
+                :nth-child(2) {
+                    font-size: 14px;
+                }
+            }
+
+            .info-chart, .info-bar {
+                font-size: 12px;
+            }
+
+            .info-other {
+                .icon {
+                    font-size: 14px;
+                }
+
+                label {
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}
+
+.dashboard-light {
+    .dashboard-title {
+        color: black;
+    }
+
+    .col-3, .col-6 {
+        .info-header {
+            color: #737373;
+        }
+
+        .info {
+            background-color: white;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+
+            .info-title {
+                color: black;
+            }
+
+            .border-start {
+                border-color: #737373 !important;
+            }
+
+            .info-content {
+                color: #297209;
+            }
+
+            .info-other {
+                color: #737373;
+            }
+        }
+    }
+}
+
+.dashboard-dark {
+    .dashboard-title {
+        color: white;
+    }
+
+    .col-3, .col-6 {
+        .info-header {
+            color: white;
+        }
+
+        .info {
+            background-color: #1E1E1E;
+            border: 1px solid white;
+
+            .info-title {
+                color: white;
+            }
+
+            .border-start {
+                border-color: white !important;
+            }
+
+            .info-content {
+                color: #3B9315;
+            }
+
+            .info-other {
+                color: white;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .dashboard {
+        .dashboard-title {
+            font-size: 17px;
+        }
+
+        .export-button {
+            font-size: 13px;
+
+            .icon {
+                font-size: 17px;
+            }
+        }
+
+        .col-3 {    
+            .info-header {
+                .icon {
+                    font-size: 13px;
+                }
+
+                label {
+                    font-size: 11px;
+                }
+            }
+
+            .info {
+                label {
+                    font-size: 13px;
+                }
+
+                .info-title {
+                    font-size: 13px;
+                }
+
+                .info-content {
+                    :nth-child(1) {
+                        font-size: 25px;
+                    }
+
+                    :nth-child(2) {
+                        font-size: 13px;
+                    }
+                }
+
+                .info-chart, .info-bar {
+                    font-size: 11px;
+                }
+
+                .info-other {
+                    .icon {
+                        font-size: 13px;
+                    }
+
+                    label {
+                        font-size: 11px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .dashboard {
+        .dashboard-title {
+            font-size: 16px;
+        }
+
+        .export-button {
+            font-size: 12px;
+
+            .icon {
+                font-size: 16px;
+            }
+        }
+
+        .col-3 {    
+            .info-header {
+                .icon {
+                    font-size: 12px;
+                }
+
+                label {
+                    font-size: 10px;
+                }
+            }
+
+            .info {
+                label {
+                    font-size: 12px;
+                }
+
+                .info-title {
+                    font-size: 12px;
+                }
+
+                .info-content {
+                    :nth-child(1) {
+                        font-size: 24px;
+                    }
+
+                    :nth-child(2) {
+                        font-size: 12px;
+                    }
+                }
+
+                .info-chart, .info-bar {
+                    font-size: 10px;
+                }
+
+                .info-other {
+                    .icon {
+                        font-size: 12px;
+                    }
+
+                    label {
+                        font-size: 10px;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,406 @@
+.cms {
+    height: 100%;
+
+    h1 {
+        font-size: 20px;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
+    }
+
+    button {
+        font-size: 14px;
+        font-weight: 500;
+        background-image: linear-gradient(to right, #3B9315, #297209);
+        color: white;
+        box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2);
+
+        &:hover {
+            background-image: linear-gradient(to right, #297209, #297209);
+        }
+
+        &:focus {
+            background-image: linear-gradient(to right, #297209, #297209);
+        }
+
+        .icon {
+            font-size: 20px;
+        }
+
+        label {
+            cursor: pointer;
+        }
+    }
+
+    .col-3 {
+        width: fit-content;
+        height: max-content;
+
+        .info {
+            label {
+                white-space: nowrap;
+            }
+
+            .info-title {
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            .border-start {
+                border-left-style: dashed !important;
+            }
+
+            .info-content {
+                :nth-child(1) {
+                    font-size: 26px;
+                    font-weight: 500;
+                }
+
+                :nth-child(2) {
+                    font-size: 14px;
+                }
+            }
+
+            .info-other {
+                .icon {
+                    font-size: 14px;
+                }
+
+                label {
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+
+    .cms-table{
+        max-height: 70vh !important;
+    
+        table {
+            font-size: 14px;
+    
+            thead {
+                .table-header {
+                    background-color: #3B9315;
+                    color: white;
+                }
+            }
+            
+            tbody {
+                tr {
+                    th, td, label {
+                        background-color: white;
+                        color: #737373;
+
+                        .form-control {
+                            font-size: 14px;
+                        }
+
+                        ::placeholder {
+                            color: #737373;
+                            opacity: 1; /* Firefox */
+                        }
+                          
+                        ::-ms-input-placeholder { /* Edge 12-18 */
+                            color: #737373;
+                        }
+
+                        button {
+                            box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.0);
+
+                            &:hover {
+                                .icon-red {
+                                    color: #DE4452;
+                                }
+                            }
+
+                            .icon {
+                                font-size: 20px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.cms-light {
+    h1 {
+        color: black;
+    }
+
+    .col-3 {
+        .info {
+            background-color: white;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+
+            .info-title {
+                color: black;
+            }
+
+            .border-start {
+                border-color: #737373 !important;
+            }
+
+            .info-content {
+                color: #297209;
+            }
+
+            .info-other {
+                color: #737373;
+            }
+        }
+    }
+
+    .cms-table-title {
+        label {
+            color: black;
+        }
+    }
+
+    .cms-table{    
+        table {
+            tbody {
+                tr {
+                    th, td, label {
+                        background-color: white;
+                        color: #737373;
+
+                        .form-control {
+                            color: black;
+                        }
+
+                        button {
+                            background-image: linear-gradient(to right, white, white);
+                            color: #737373;
+
+                            &:hover {
+                                .icon-green {
+                                    color: #297209;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.cms-dark {
+    h1 {
+        color: white;
+    }
+
+    .col-3 {
+        .info {
+            background-color: #1E1E1E;
+            border: 1px solid white;
+
+            .info-title {
+                color: white;
+            }
+
+            .border-start {
+                border-color: white !important;
+            }
+
+            .info-content {
+                color: #3B9315;
+            }
+
+            .info-other {
+                color: white;
+            }
+        }
+    }
+
+    .cms-table-title {
+        label {
+            color: white;
+        }
+    }
+
+    .cms-table{
+        table {
+            tbody {
+                tr {
+                    th, td, label {
+                        background-color: #1E1E1E;
+                        color: white;
+
+                        .form-control {
+                            background-color: #1E1E1E;
+                            color: white;
+                        }
+
+                        .disabled {
+                            background-color: #2C2C2C;
+                            color: white;
+                        }
+
+                        button {
+                            background-image: linear-gradient(to right, #1E1E1E, #1E1E1E);
+                            color: white;
+
+                            &:hover {
+                                .button-green {
+                                    color: #3B9315;
+                                }
+
+                                .icon-green {
+                                    color: #3B9315;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .cms {
+        h1 {
+            font-size: 17px;
+        }
+
+        button {
+            font-size: 13px;
+
+            .icon {
+                font-size: 17px;
+            }
+        }
+
+        .col-3 {
+            .info {
+                label {
+                    font-size: 13px;
+                }
+
+                .info-title {
+                    font-size: 13px;
+                }
+
+                .info-content {
+                    :nth-child(1) {
+                        font-size: 25px;
+                    }
+
+                    :nth-child(2) {
+                        font-size: 13px;
+                    }
+                }
+
+                .info-other {
+                    .icon {
+                        font-size: 13px;
+                    }
+
+                    label {
+                        font-size: 11px;
+                    }
+                }
+            }
+        }
+
+        .cms-table {
+            max-height: 65vh !important;
+
+            table {
+                font-size: 13px;
+                
+                tbody {
+                    tr {
+                        th, td, label {
+                            .form-control {
+                                font-size: 13px;
+                            }
+
+                            button {
+                                .icon {
+                                    font-size: 17px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .cms {
+        h1 {
+            font-size: 16px;
+        }
+
+        button {
+            font-size: 12px;
+
+            .icon {
+                font-size: 16px;
+            }
+        }
+
+        .col-3 {
+            .info {
+                label {
+                    font-size: 12px;
+                }
+
+                .info-title {
+                    font-size: 12px;
+                }
+
+                .info-content {
+                    :nth-child(1) {
+                        font-size: 24px;
+                    }
+
+                    :nth-child(2) {
+                        font-size: 12px;
+                    }
+                }
+
+                .info-other {
+                    .icon {
+                        font-size: 12px;
+                    }
+
+                    label {
+                        font-size: 10px;
+                    }
+                }
+            }
+        }
+
+        .cms-table {
+            max-height: 75vh !important;
+        
+            table {
+                font-size: 12px;
+                
+                tbody {
+                    tr {
+                        th, td, label {
+                            .form-control {
+                                font-size: 12px;
+                            }
+
+                            button {
+                                .icon {
+                                    font-size: 16px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

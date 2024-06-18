@@ -1,0 +1,149 @@
+.login {
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+
+    .form-container {
+        max-width: 60vw;
+
+        .col {
+            .login-container {
+                width: 86%;
+            }
+
+            img {
+                width: 60%;
+            }
+
+            label {
+                font-weight: 500;
+            }
+
+            .password-visibility {
+                font-size: 20px;
+                cursor: pointer;
+                margin-left: -30px;
+                color: #297209;
+            }
+
+            button {
+                background-image: linear-gradient(to right, #3B9315, #297209);
+                color: white;
+                font-weight: 500;
+                box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2);
+
+                &:hover {
+                    background-image: linear-gradient(to right, #297209, #297209);
+                }
+            }
+
+            .spinner-border {
+                color: #3B9315;
+            }
+
+            .login-message {
+                color: #DE4452;
+                font-size: 14px;
+            }
+        }
+
+        .col-6 {
+            .carousel {
+                img {
+                    max-height: 100%;
+                }
+            }
+        }
+    }
+}
+
+.login-light {
+    background-image: url("../assets/background/bg_login.webp");
+
+    .form-container {
+        background-color: white;
+        color: black;
+    }
+}
+
+.login-dark {
+    background-image: url("../assets/background/bg_login-dark.webp");
+
+    .form-container {
+        background-color: #2C2C2C;
+        color: white;
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .login {
+        .form-container {
+            .col {
+                h3 {
+                    font-size: 23px;
+                }
+
+                p {
+                    font-size: 14px;
+                }
+    
+                label {
+                    font-size: 14px;
+                }
+
+                input {
+                    font-size: 14px;
+                }
+    
+                .password-visibility {
+                    font-size: 17px;
+                }
+    
+                button {
+                    font-size: 14px;
+                }
+
+                .login-message {
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .login {
+        .form-container {
+            .col {
+                h3 {
+                    font-size: 22px;
+                }
+
+                p {
+                    font-size: 13px;
+                }
+    
+                label {
+                    font-size: 13px;
+                }
+
+                input {
+                    font-size: 13px;
+                }
+    
+                .password-visibility {
+                    font-size: 16px;
+                }
+    
+                button {
+                    font-size: 13px;
+                }
+
+                .login-message {
+                    font-size: 11px;
+                }
+            }
+        }
+    }
+}

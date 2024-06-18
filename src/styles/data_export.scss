@@ -1,0 +1,95 @@
+.button-group {
+    button {
+        .icon {
+            font-size: 20px;
+        }
+
+        label {
+            font-size: 16px !important;
+            cursor: pointer;
+        }
+    }
+
+    .export-weekly {
+        border: 2px solid #297209 !important;
+        background-color: transparent;
+        color: white;
+
+        &:hover {
+            background-image: linear-gradient(to right, #297209, #297209);
+            .icon {
+                color: white;
+            }
+            label {
+                color: white !important;
+            }
+        }
+    }
+
+    .export {
+        background-image: linear-gradient(to right, #3B9315, #297209);
+        color: white;
+
+        &:hover {
+            background-image: linear-gradient(to right, #297209, #297209);
+        }
+
+        label {
+            color: white !important;
+        }
+    }
+
+    .spinner-border {
+        color: #3B9315;
+    }
+}
+
+.button-group-light {
+    .export-weekly {
+        background-color: transparent;
+        color: #297209;
+
+        label {
+            color: #297209 !important;
+        }
+    }
+}
+
+.button-group-dark {
+    .export-weekly {
+        background-color: transparent;
+        color: white;
+
+        label {
+            color: white !important;
+        }
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .button-group {
+        button {
+            .icon {
+                font-size: 17px;
+            }
+    
+            label {
+                font-size: 14px !important;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .button-group {
+        button {
+            .icon {
+                font-size: 16px;
+            }
+    
+            label {
+                font-size: 13px !important;
+            }
+        }
+    }
+}

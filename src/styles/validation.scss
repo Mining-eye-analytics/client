@@ -1,0 +1,154 @@
+.validation {
+    .button-true {
+        background-image: linear-gradient(to right, #3B9315, #297209);
+        color: white;
+        font-weight: 500;
+
+        &:hover {
+            background-image: linear-gradient(to right, #297209, #297209);
+        }
+    }
+
+    .button-false {
+        border: 2px solid #3B9315;
+        font-weight: 500;
+
+        &:hover {
+            background-image: linear-gradient(to right, #297209, #297209);
+            border: 2px solid #297209;
+            color: white;
+        }
+    }
+
+    .modal {
+        .modal-header {
+            .modal-title {
+                font-size: 20px;
+            }
+
+            .btn-close {
+                background-color: white;
+            }
+        }
+
+        .modal-body {
+            max-height: 300px;
+        }
+
+        .modal-footer {
+            .cancel-button {
+                background-image: linear-gradient(to right, white, white);
+                border: 2px solid #3B9315;
+                color: #297209;
+                font-weight: 500;
+    
+                &:hover {
+                    background-image: linear-gradient(to right, #297209, #297209);
+                    border: 2px solid #297209;
+                    color: white;
+                }
+            }
+    
+            .submit-button {
+                background-image: linear-gradient(to right, #3B9315, #297209);
+                color: white;
+                font-weight: 500;
+    
+                &:hover {
+                    background-image: linear-gradient(to right, #297209, #297209);
+                }
+            }
+    
+            .disabled {
+                background-image: linear-gradient(to right, #7FB766, #74A460);
+                pointer-events: none;
+            }
+        }
+    }
+}
+
+.validation-light {
+    .button-false {
+        background-image: linear-gradient(to right, white, white);
+        color: #297209;
+    }
+
+    .modal {
+        .modal-header {
+            background-color: white;
+        }
+
+        .modal-body {
+            background-color: white;
+        }
+
+        .modal-footer {
+            background-color: white;
+        }
+    }
+}
+
+.validation-dark {
+    .button-false {
+        background-image: linear-gradient(to right, #1E1E1E, #1E1E1E);
+        color: white;
+    }
+
+    .modal {
+        .modal-header {
+            background-color: #1E1E1E;
+        }
+
+        .modal-body {
+            background-color: #1E1E1E;
+        }
+
+        .modal-footer {
+            background-color: #1E1E1E;
+        }
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .validation {
+        .modal {
+            .modal-header {
+                .modal-title {
+                    font-size: 17px;
+                }
+            }
+
+            .modal-body {
+                input {
+                    font-size: 14px;
+                }
+
+                textarea {
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .validation {
+        .modal {
+            .modal-header {
+                .modal-title {
+                    font-size: 16px;
+                }
+            }
+
+            .modal-body {
+                input {
+                    font-size: 13px;
+                }
+
+                textarea {
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+}

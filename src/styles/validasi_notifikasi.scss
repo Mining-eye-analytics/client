@@ -1,0 +1,206 @@
+.validasi-notifikasi {
+    .title {
+        box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+        padding: 8px 16px;
+        border-radius: 8px 8px 0 0;
+
+        h6 {
+            margin: 0px;
+        }
+
+        label {
+            font-size: 12px;
+        }
+    }
+
+    .content {
+        box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+        padding: 12px 24px;
+        border-radius: 0 0 8px 8px;
+
+        .deviation-img {
+            border: 3px solid #297209;
+        }
+
+        .spinner-border {
+            color: #3B9315;
+        }
+
+        .notification-data {
+            font-size: 14px;
+
+            .status-none {
+                font-weight: 500;
+                background-color: #F0F3FF;
+                border: 2px solid #B1C5F6;
+                color: #1573FD;
+            }
+
+            .status-true {
+                font-weight: 500;
+                background-color: #D2F1DD;
+                border: 2px solid #8EDCA9;
+                color: #1F8A58;
+            }
+
+            .status-false {
+                font-weight: 500;
+                background-color: #F9D1CC;
+                border: 2px solid #F08C80;
+                color: #DE4452;
+            }
+            
+            .notification-navigation {
+                button {
+                    background-color: transparent;
+                }
+    
+                .disabled {
+                    visibility: hidden;
+                }
+            }
+
+            .icon {
+                font-size: 20px;
+            }
+        }
+
+        .not-yet-notification {
+            font-size: 14px;
+        }
+    }
+}
+
+.validasi-notifikasi-light {
+    .title {
+        background-color: white;
+
+        h6 {
+            color: black;
+        }
+
+        label {
+            color: #737373;
+        }
+    }
+
+    .content {
+        background-color: white;
+        color: black;
+
+        .notification-data {
+            .notification-navigation {
+                button {
+                    color: #737373;
+
+                    &:hover {
+                        color: #297209;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.validasi-notifikasi-dark {
+    .title {
+        background-color: #1E1E1E;
+
+        h6 {
+            color: white;
+        }
+
+        label {
+            color: white;
+        }
+    }
+
+    .content {
+        background-color: #1E1E1E;
+        color: white;
+
+        .notification-data {
+            .notification-navigation {
+                button {
+                    color: white;
+
+                    &:hover {
+                        color: #3B9315;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .validasi-notifikasi {
+        .title {
+            h6 {
+                font-size: 14px;
+            }
+
+            label {
+                font-size: 11px;
+            }
+        }
+
+        .content {
+            .deviation-img {
+                border: 2.5px solid #297209;
+            }
+
+            .notification-data {
+                font-size: 13px;
+
+                h6 {
+                    font-size: 13px;
+                }
+
+                .icon {
+                    font-size: 17px;
+                }
+            }
+
+            .not-yet-notification {
+                font-size: 13px;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .validasi-notifikasi {
+        .title {
+            h6 {
+                font-size: 13px;
+            }
+
+            label {
+                font-size: 10px;
+            }
+        }
+
+        .content {
+            .deviation-img {
+                border: 2.5px solid #297209;
+            }
+
+            .notification-data {
+                font-size: 12px;
+
+                h6 {
+                    font-size: 12px;
+                }
+
+                .icon {
+                    font-size: 16px;
+                }
+            }
+
+            .not-yet-notification {
+                font-size: 12px;
+            }
+        }
+    }
+}

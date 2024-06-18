@@ -1,0 +1,329 @@
+.notification {
+    .title {
+        box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+        padding: 8px 16px;
+        border-radius: 8px 8px 0 0;
+
+        h6 {
+            margin: 0px;
+        }
+
+        label {
+            font-size: 12px;
+        }
+
+        .notif-sound {
+            font-size: 20px;
+            color: #3B9315;
+
+            &:hover {
+                color: #297209;
+            }
+        }
+    }
+
+    .content {
+        box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+        padding: 12px 24px;
+        border-radius: 0 0 8px 8px;
+
+        .notification-filter {
+            .dropdown {
+                .dropdown-toggle {
+                    font-size: 12px;
+                    font-weight: 500;
+
+                    &:hover {
+                        background-color: #DFF4DF !important;
+                        color: #297209;
+                    }
+                }
+
+                .dropdown-menu {
+                    .dropdown-item {
+                        color: #737373;
+                        font-size: 12px;
+                        font-weight: 500;
+    
+                        &:hover {
+                            background-color: #DFF4DF !important;
+                            color: #297209;
+                        }
+                    }
+    
+                    .active {
+                        background-image: linear-gradient(to right, #3B9315, #297209);
+                        color: white !important;
+                        pointer-events: none;
+                    }
+                }
+            }
+        }
+
+        .notification-list {
+            max-height: 60.3vh;
+
+            button {
+                font-size: 12px;
+                font-weight: 500;
+                box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2);
+
+                &:hover {
+                    background-color: #DFF4DF;
+                    color: #297209;
+                }
+
+                label {
+                    cursor: pointer;
+                }
+
+                .icon {
+                    font-size: 20px;
+                }
+
+                .status-none {
+                    background-color: #F0F3FF;
+                    border: 2px solid #B1C5F6;
+                    color: #1573FD;
+                }
+
+                .status-true {
+                    background-color: #D2F1DD;
+                    border: 2px solid #8EDCA9;
+                    color: #1F8A58;
+                }
+
+                .status-false {
+                    background-color: #F9D1CC;
+                    border: 2px solid #F08C80;
+                    color: #DE4452;
+                }
+            }
+
+            .active {
+                background-image: linear-gradient(to right, #3B9315, #297209);
+                color: white;
+
+                &:hover {
+                    color: white;
+                }
+            }
+
+            .load-more-button {
+                color: #3B9315;
+                cursor: pointer;
+                font-weight: 500;
+
+                &:hover {
+                    color: #297209;
+                }
+            }
+
+            hr {
+                margin-bottom: 2px;
+            }
+        }
+
+        .spinner-border {
+            color: #3B9315;
+        }
+    }
+}
+
+.notification-light {
+    .title {
+        background-color: white;
+
+        h6 {
+            color: black;
+        }
+
+        label {
+            color: #737373;
+        }
+    }
+
+    .content {
+        background-color: white;
+
+        .notification-filter {
+            .dropdown {
+                .dropdown-toggle {
+                    color: #737373;
+                }
+
+                .dropdown-menu {
+                    background-color: white;
+                    
+                    .dropdown-item {
+                        color: #737373;
+                    }
+                }
+            }
+        }
+
+        .notification-list {
+            button {
+                background-color: white;
+                color: #737373;
+            }
+
+            .data-not-found {
+                color: black;
+            }
+        }
+    }
+}
+
+.notification-dark {
+    .title {
+        background-color: #1E1E1E;
+
+        h6 {
+            color: white;
+        }
+
+        label {
+            color: white;
+        }
+    }
+
+    .content {
+        background-color: #1E1E1E;
+
+        .notification-filter {
+            .dropdown {
+                .dropdown-toggle {
+                    color: white;
+                }
+
+                .dropdown-menu {
+                    background-color: #1E1E1E;
+                    
+                    .dropdown-item {
+                        color: white;
+                    }
+                }
+            }
+        }
+
+        .notification-list {
+            button {
+                background-color: #2C2C2C;
+                color: white;
+            }
+
+            .data-not-found {
+                color: white;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1530px) {
+    .notification {
+        .title {
+            h6 {
+                font-size: 14px;
+            }
+
+            label {
+                font-size: 11px;
+            }
+
+            .notif-sound {
+                font-size: 17px;
+            }
+        }
+
+        .content {
+            .notification-filter {
+                .dropdown {
+                    .dropdown-toggle {
+                        font-size: 11px;
+                    }
+
+                    .dropdown-menu {
+                        .dropdown-item {
+                            font-size: 11px;
+                        }
+                    }
+                }
+            }
+
+            .notification-list {
+                max-height: 60vh !important;
+
+                button {
+                    font-size: 11px !important;
+
+                    .icon {
+                        font-size: 17px !important;
+                    }
+                }
+
+                .data-not-found {
+                    font-size: 13px;
+                }
+
+                .load-more-button {
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .notification {
+        .title {
+            h6 {
+                font-size: 13px;
+            }
+
+            label {
+                font-size: 10px;
+            }
+
+            .notif-sound {
+                font-size: 16px;
+            }
+        }
+
+        .content {
+            .notification-filter {
+                .dropdown {
+                    .dropdown-toggle {
+                        font-size: 10px;
+                    }
+
+                    .dropdown-menu {
+                        .dropdown-item {
+                            font-size: 10px;
+                        }
+                    }
+                }
+            }
+
+            .notification-list {
+                max-height: 59.1vh !important;
+
+                button {
+                    font-size: 10px !important;
+
+                    .icon {
+                        font-size: 16px !important;
+                    }
+                }
+
+                .data-not-found {
+                    font-size: 12px;
+                }
+
+                .load-more-button {
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}

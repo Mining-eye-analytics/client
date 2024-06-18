@@ -1,0 +1,19 @@
+FROM node:latest as builder
+
+WORKDIR /client
+
+ARG API=5000
+ENV REACT_APP_API_PORT=$API
+
+COPY package-lock.json package.json ./
+COPY ./src ./src
+COPY ./public ./public
+
+RUN npm install
+RUN npm run build
+RUN npm install -g serve
+
+EXPOSE 3000
+
+CMD ["serve", "-s", "build"]
+
